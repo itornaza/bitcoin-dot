@@ -17,3 +17,9 @@ And Jon Atack's blog:
 [ How to compile Bitcoin Core and run the unit and functional tests ](https://jonatack.github.io/articles/how-to-compile-bitcoin-core-and-run-the-tests)
 
 [How to Review Pull Requests in Bitcoin Core](https://jonatack.github.io/articles/how-to-review-pull-requests-in-bitcoin-core)
+
+## How to use
+
+To include it in your shell write the following line in `~/.zshrc`
+
+`source <path_to_this_file>`

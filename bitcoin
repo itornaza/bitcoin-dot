@@ -1,0 +1,106 @@
+###############################################################################
+#                            Bitcoin Core dot file                            #
+#                           (b - prefix for bitcoin)                          #
+###############################################################################
+
+# This configuration is intended for macos
+# To include it in your shell write the following line in ~/.zshrc 
+# source <path_to_this_file>
+
+#-----------------------------------------------------------------------------#
+#                     GENERIC BITCOIN CORE BUILD PROCEDURE                    #
+#-----------------------------------------------------------------------------#
+
+# 1. bconfigure
+# 2. bclean
+# 3. bmake
+# 4. bcheck
+# 5. btest or btest --extended
+
+#-----------------------------------------------------------------------------#
+#                                    SETUP                                    #
+#-----------------------------------------------------------------------------#
+
+# Install brew dependencies
+alias install-toolkit="brew install ccache llvm berkeley-db@4 automake boost \
+                      libevent libnatpmp libtool miniupmpc pkg-config python \
+                      qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov"
+
+#-----------------------------------------------------------------------------#
+#                               SHELL VARIABLES                               #
+#-----------------------------------------------------------------------------#
+
+# System tools
+ed_=code # or vim
+bc_=/opt/homebrew/opt/llvm/bin/clang
+bcpp_=/opt/homebrew/opt/llvm/bin/clang++
+blldb_=/opt/homebrew/opt/llvm/bin/lldb
+
+# System info
+ncores_="$(($(sysctl -n hw.physicalcpu)+1))"
+
+# Common paths
+bpath_=~/Documents/projects/bitcoin/bitcoin
+bdata_="~/Library/Application\ Support/Bitcoin"
+
+#-----------------------------------------------------------------------------#
+#                                 PATH ALIASES                                #
+#-----------------------------------------------------------------------------#
+
+# Bitcoin Core project paths
+alias b="cd $bpath_;pwd"
+alias bdata="cd $bdata_;pwd"
+
+# Open common Bitcoin files
+alias bconf="$ed_ $bdata_/bitcoin.conf"
+alias blog-main="$ed_ $bdata_/debug.log"
+alias blog-test="$ed_ $bdata_/testnet3/debug.log"
+alias blog-signet="$ed_ $bdata_/signet/debug.log"
+alias blog-regtest="$ed_ $bdata_/regtest/debug.log"
+
+#-----------------------------------------------------------------------------#
+#                               COMMAND ALIASES                               #
+#-----------------------------------------------------------------------------#
+
+# GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
+# Always are build for the latest stable release!
+# bitcoind (kept as is)
+# bitcoin-cli (kept as is)
+alias bitcoin-clin="bitcoin-cli -named"
+
+# LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
+alias bd="$bpath_/src/bitcoind"
+alias bcli="$bpath/src/bitcoin-cli"
+alias bclin="$bpath/src/bitcoin-cli -named"
+
+# LLVM used with ccache by default
+alias bc=$bc_ 
+alias bcpp=$bcpp_ 
+alias blldb=$blldb_
+
+# Configure
+alias bconfigure="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings"
+alias bconfigure-bare="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_"
+alias bconfigure-debug="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
+alias bconfigure-fuzz="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+
+# Make
+alias bclean="make clean"
+alias bcache-clean="ccache -C"
+alias bmake="make -j $ncores_"
+alias bcheck="make -j $ncores_ check"
+alias bcov="make cov"
+alias bdocs="make docs"
+alias bdocs-clean="make clean-docs"
+
+# Functional tests, append the --extended, --coverage flags as needed
+alias btest="test/functional/test_runner.py -j $ncores_" 
+
+# Clean up data files after manual tests
+alias bdata-clear-main="rm -fr $bdata_/anchors.dat $bdata_/peers.dat $bdata_/debug.log"
+alias bdata-clear-test="rm -fr $bdata_/testnet3/anchors.dat $bdata_/testnet3/peers.dat $bdata_/testnet3/debug.log"
+alias bdata-clear-signet="rm -fr $bdata_/signet/anchors.dat $bdata_/signet/peers.dat $bdata_/signet/debug.log"
+alias bdata-clear-regtest="rm -fr $bdata_/regtest/anchors.dat $bdata_/regtest/peers.dat $bdata_/regtest/debug.log"
+
+# Lightning with config file
+alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"

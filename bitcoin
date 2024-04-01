@@ -109,5 +109,8 @@ alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
 
 # Git, the usual suspect!
 
-# Show diferences of a file compared to the original
-alias bdiff="git difftool origin/master " # <plus the file to compare>
+# Ref: https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
+# on how to set up the default editor that git uses for diff and merge
+
+# Show diffs of a file to its original version
+alias bdiff="git difftool origin/master " # <plus the file>

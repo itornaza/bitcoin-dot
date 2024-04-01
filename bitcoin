@@ -40,8 +40,9 @@ blldb_=/opt/homebrew/opt/llvm/bin/lldb
 ncores_="$(($(sysctl -n hw.physicalcpu)+1))"
 
 # Common paths
-bpath_=~/Documents/projects/bitcoin/bitcoin
+bpath_="~/Documents/projects/bitcoin/bitcoin"
 bdata_="~/Library/Application\ Support/Bitcoin"
+bdot_="~/Documents/projects/bitcoin/btc-dot" # Location of this file
 
 #-----------------------------------------------------------------------------#
 #                                 PATH ALIASES                                #
@@ -50,6 +51,7 @@ bdata_="~/Library/Application\ Support/Bitcoin"
 # Bitcoin Core project paths
 alias b="cd $bpath_;pwd"
 alias bdata="cd $bdata_;pwd"
+alias bdot="cd $bdot_;pwd"
 
 # Open common Bitcoin files
 alias bconf="$ed_ $bdata_/bitcoin.conf"
@@ -104,3 +106,8 @@ alias bdata-clear-regtest="rm -fr $bdata_/regtest/anchors.dat $bdata_/regtest/pe
 
 # Lightning with config file
 alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
+
+# Git, the usual suspect!
+
+# Show diferences of a file compared to the original
+alias bdiff="git difftool origin/master " # <plus the file to compare>

@@ -8,16 +8,6 @@
 # source <path_to_this_file>
 
 #-----------------------------------------------------------------------------#
-#                     GENERIC BITCOIN CORE BUILD PROCEDURE                    #
-#-----------------------------------------------------------------------------#
-
-# 1. bconfigure
-# 2. bclean
-# 3. bmake
-# 4. bcheck
-# 5. btest or btest --extended
-
-#-----------------------------------------------------------------------------#
 #                                    SETUP                                    #
 #-----------------------------------------------------------------------------#
 
@@ -65,7 +55,7 @@ alias blog-regtest="$ed_ $bdata_/regtest/debug.log"
 #-----------------------------------------------------------------------------#
 
 # GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
-# Always are build for the latest stable release!
+# Always are build with `make install` for the latest stable release!
 # bitcoind (kept as is)
 # bitcoin-cli (kept as is)
 alias bitcoin-clin="bitcoin-cli -named"
@@ -74,6 +64,8 @@ alias bitcoin-clin="bitcoin-cli -named"
 alias bd="$bpath_/src/bitcoind"
 alias bcli="$bpath/src/bitcoin-cli"
 alias bclin="$bpath/src/bitcoin-cli -named"
+
+# Build 
 
 # LLVM used with ccache by default
 alias bc=$bc_ 
@@ -98,11 +90,23 @@ alias bdocs-clean="make clean-docs"
 # Functional tests, append the --extended, --coverage flags as needed
 alias btest="test/functional/test_runner.py -j $ncores_" 
 
-# Clean up data files after manual tests
+# Test cases support
+
+# Clean up node finding and debug files after manual tests
 alias bdata-clear-main="rm -fr $bdata_/anchors.dat $bdata_/peers.dat $bdata_/debug.log"
 alias bdata-clear-test="rm -fr $bdata_/testnet3/anchors.dat $bdata_/testnet3/peers.dat $bdata_/testnet3/debug.log"
 alias bdata-clear-signet="rm -fr $bdata_/signet/anchors.dat $bdata_/signet/peers.dat $bdata_/signet/debug.log"
 alias bdata-clear-regtest="rm -fr $bdata_/regtest/anchors.dat $bdata_/regtest/peers.dat $bdata_/regtest/debug.log"
+
+# Create image with predefined size to provide a controlled testing environment
+bcreate-tmp() {
+  hdiutil create -megabytes $1 -fs HFS+ -volname tmp ~/tmp.dmg
+  hdiutil attach ~/tmp.dmg
+}
+bdestroy-tmp() {
+  hdiutil detach /Volumes/tmp
+  rm -fr ~/tmp.dmg
+}
 
 # Lightning with config file
 alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
@@ -110,7 +114,18 @@ alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
 # Git, the usual suspect!
 
 # Ref: https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-# on how to set up the default editor that git uses for diff and merge
+# on how to set up the default editor git uses for diff and merge
 
 # Show diffs of a file to its original version
 alias bdiff="git difftool origin/master " # <plus the file>
+
+#-----------------------------------------------------------------------------#
+#                         BITCOIN CORE BUILD PROCEDURES                       #
+#-----------------------------------------------------------------------------#
+
+# 1. Build and run unit and functional tests
+alias bb="bconfigure && bclean && bmake && bcheck && btest"
+
+# 2. Build and run unit and exetended functional tests
+alias bbe="bconfigure && bclean && bmake && bcheck && btest --extended"
+

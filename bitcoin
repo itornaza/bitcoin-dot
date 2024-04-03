@@ -12,115 +12,125 @@
 #-----------------------------------------------------------------------------#
 
 # Install brew dependencies
-alias install-toolkit="brew install ccache llvm berkeley-db@4 automake boost \
-                      libevent libnatpmp libtool miniupmpc pkg-config python \
-                      qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov"
+alias btools="brew install ccache llvm berkeley-db@4 automake boost \
+              libevent libnatpmp libtool miniupmpc pkg-config python \
+              qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov"
 
 #-----------------------------------------------------------------------------#
-#                               SHELL VARIABLES                               #
+#                                    EXPORTS                                  #
 #-----------------------------------------------------------------------------#
 
 # System tools
-ed_=code # or vim
-bc_=/opt/homebrew/opt/llvm/bin/clang
-bcpp_=/opt/homebrew/opt/llvm/bin/clang++
-blldb_=/opt/homebrew/opt/llvm/bin/lldb
+export ED_=code # or vim
+export BC_=/opt/homebrew/opt/llvm/bin/clang
+export BCPP_=/opt/homebrew/opt/llvm/bin/clang++
+export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
 
 # System info
-ncores_="$(($(sysctl -n hw.physicalcpu)+1))"
+export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
+export NCORES_FIXED_=4
 
-# Common paths
-bpath_="~/Documents/projects/bitcoin/bitcoin"
-bdata_="~/Library/Application\ Support/Bitcoin"
-bdot_="~/Documents/projects/bitcoin/btc-dot" # Location of this file
+# Bitcoin paths
+export BPATH_="~/Documents/projects/bitcoin/bitcoin"
+export BDATA_="~/Library/Application\ Support/Bitcoin"
+export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of this file
 
 #-----------------------------------------------------------------------------#
 #                                 PATH ALIASES                                #
 #-----------------------------------------------------------------------------#
 
-# Bitcoin Core project paths
-alias b="cd $bpath_;pwd"
-alias bdata="cd $bdata_;pwd"
-alias bdot="cd $bdot_;pwd"
+# Bitcoin paths
+alias b="cd $BPATH_;pwd"
+alias bdata="cd $BDATA_;pwd"
+alias bdot="cd $BDOT_;pwd"
 
-# Open common Bitcoin files
-alias bconf="$ed_ $bdata_/bitcoin.conf"
-alias blog-main="$ed_ $bdata_/debug.log"
-alias blog-test="$ed_ $bdata_/testnet3/debug.log"
-alias blog-signet="$ed_ $bdata_/signet/debug.log"
-alias blog-regtest="$ed_ $bdata_/regtest/debug.log"
+# Open Bitcoin files
+alias bconf="$ED_ $BDATA_/bitcoin.conf"
+alias blog-main="$ED_ $BDATA_/debug.log"
+alias blog-test="$ED_ $BDATA_/testnet3/debug.log"
+alias blog-signet="$ED_ $BDATA_/signet/debug.log"
+alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 
 #-----------------------------------------------------------------------------#
 #                               COMMAND ALIASES                               #
 #-----------------------------------------------------------------------------#
 
+### Operations
+
 # GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
-# Always are build with `make install` for the latest stable release!
+# Build with `make install` and only for the latest stable release!
 # bitcoind (kept as is)
 # bitcoin-cli (kept as is)
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
-alias bd="$bpath_/src/bitcoind"
+alias bd="$BPATH_/src/bitcoind"
 alias bcli="$bpath/src/bitcoin-cli"
 alias bclin="$bpath/src/bitcoin-cli -named"
 
-# Build 
+### Git
+
+# Show diffs of a file copmared to the original version
+# Note: Set up the editor git uses for difftool and mergetool
+# https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
+alias bdiff="git difftool origin/master " # <plus the file>
+
+# Reset any changes and remove new files since the last commit
+alias breset="git reset --hard HEAD; git clean -fd;"
+
+# Get all new changes from origin
+alias bmerge="git checkout master; git fetch origin; git merge;"
+
+### Build 
 
 # LLVM used with ccache by default
-alias bc=$bc_ 
-alias bcpp=$bcpp_ 
-alias blldb=$blldb_
+alias bc=$BC_ 
+alias bcpp=$BCPP_ 
+alias blldb=$BLLDB_
 
 # Configure
-alias bconfigure="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings"
-alias bconfigure-bare="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_"
-alias bconfigure-debug="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
-alias bconfigure-fuzz="./autogen.sh && ./configure CC=$bc_ CXX=$bcc_ --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings"
+alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$bcc_"
+alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$bcc_ --with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
+alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$bcc_ --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 
 # Make
 alias bclean="make clean"
 alias bcache-clean="ccache -C"
-alias bmake="make -j $ncores_"
-alias bcheck="make -j $ncores_ check"
+alias bmake="make -j $NCORES_"
+alias bcheck="make -j $NCORES_ check"
 alias bcov="make cov"
 alias bdocs="make docs"
 alias bdocs-clean="make clean-docs"
 
+### Functional tests
+
 # Functional tests, append the --extended, --coverage flags as needed
-alias btest="test/functional/test_runner.py -j $ncores_" 
+# Caution! Using NCORES_ with functional tests which is 13 on M2 Pro Max 
+# some tests fail
+alias btest="test/functional/test_runner.py -j $NCORES_FIXED_" 
 
-# Test cases support
-
-# Clean up node finding and debug files after manual tests
-alias bdata-clear-main="rm -fr $bdata_/anchors.dat $bdata_/peers.dat $bdata_/debug.log"
-alias bdata-clear-test="rm -fr $bdata_/testnet3/anchors.dat $bdata_/testnet3/peers.dat $bdata_/testnet3/debug.log"
-alias bdata-clear-signet="rm -fr $bdata_/signet/anchors.dat $bdata_/signet/peers.dat $bdata_/signet/debug.log"
-alias bdata-clear-regtest="rm -fr $bdata_/regtest/anchors.dat $bdata_/regtest/peers.dat $bdata_/regtest/debug.log"
+# Clean up node seeding and debug files after manual tests
+alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"
+alias bdata-clear-test="rm -fr $BDATA_/testnet3/anchors.dat $BDATA_/testnet3/peers.dat $BDATA_/testnet3/debug.log"
+alias bdata-clear-signet="rm -fr $BDATA_/signet/anchors.dat $BDATA_/signet/peers.dat $BDATA_/signet/debug.log"
+alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/peers.dat $BDATA_/regtest/debug.log"
 
 # Create image with predefined size to provide a controlled testing environment
 bcreate-tmp() {
   hdiutil create -megabytes $1 -fs HFS+ -volname tmp ~/tmp.dmg
   hdiutil attach ~/tmp.dmg
 }
+export -f bcreate-tmp
+# and destroy for proper housekeeping
 bdestroy-tmp() {
   hdiutil detach /Volumes/tmp
   rm -fr ~/tmp.dmg
 }
-
-# Lightning with config file
-alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
-
-# Git, the usual suspect!
-
-# Ref: https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-# on how to set up the default editor git uses for diff and merge
-
-# Show diffs of a file to its original version
-alias bdiff="git difftool origin/master " # <plus the file>
+export -f bdestroy-tmp
 
 #-----------------------------------------------------------------------------#
-#                         BITCOIN CORE BUILD PROCEDURES                       #
+#                             REVIEW PROCEDURES                               #
 #-----------------------------------------------------------------------------#
 
 # 1. Build and run unit and functional tests
@@ -129,3 +139,9 @@ alias bb="bconfigure && bclean && bmake && bcheck && btest"
 # 2. Build and run unit and exetended functional tests
 alias bbe="bconfigure && bclean && bmake && bcheck && btest --extended"
 
+#-----------------------------------------------------------------------------#
+#                                 LIGHTNING                                   #
+#-----------------------------------------------------------------------------#
+
+# Lightning with config file
+alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"

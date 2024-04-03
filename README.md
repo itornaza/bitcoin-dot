@@ -6,11 +6,11 @@ This is a simple file that defines aliases and exports in order to simplify and 
 
 ## Systems
 
-Intended to be used on copmuters running macos and the zsh shell.
+Intended to be used on computers running macos and the zsh shell.
 
 ## How to use
 
-To include the configuration in your shell environment include the following line in `~/.zshrc`
+To include the configuration in your shell environment include the following line in `~/.zshrc` like.
 
 `source <path_to_this_file>`
 

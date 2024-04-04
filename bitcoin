@@ -109,20 +109,22 @@ alias bdocs-clean="make clean-docs"
 ### Functional tests
 
 # Functional tests, append --jobs=XX --extended, --coverage flags as needed
-
-# TODO: add optimum core number
 alias btest-run="test/functional/test_runner.py" 
-alias btest-clear="rm -rf test/cache; pkill -9 bitcoind;"
+alias btest-clean="rm -rf test/cache; pkill -9 bitcoind;"
 
 # Createe a RAM disk (4 GiB) to speed up testing
 # { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
 alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://8388608)"
 alias btest-ram="test/functional/test_runner.py --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
 alias bdestroy-ram="umount /Volumes/ramdisk"
-# All that combined
+
+# All functional tests without extra flags
 alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
-# Using `--extended --jobs=4`, if jobs >12 some tests fail
-alias btest-ext="bcreate-ram && btest-ram --extended && bdestroy-ram" 
+
+# All functional and extended tests
+# - if jobs > 12 some tests fail, the default 4 jobs execute faster
+# - Run with a ramdisk makes all tests fail
+alias btest-ext="btest-run --extended" 
 
 # Clean up node seeding and debug files after manual tests
 alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"

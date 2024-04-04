@@ -2,7 +2,7 @@
 
 ## Summary
 
-This is a simple file that defines aliases and exports in order to simplify and streamline the Bitcoin Core testing and development process.
+This is a [simple file](https://github.com/itornaza/btc-dot/blob/main/bitcoin) that defines aliases and exports in order to simplify and streamline the Bitcoin Core testing and development process.
 
 ## Systems
 
@@ -10,7 +10,7 @@ Intended to be used on computers running macos and the zsh shell.
 
 ## How to use
 
-To include the configuration in your shell environment include the following line in `~/.zshrc` like.
+To include the [bitcoin](https://github.com/itornaza/btc-dot/blob/main/bitcoin) configuration in your shell environment include the following line in `~/.zshrc` like.
 
 `source <path_to_this_file>`
 

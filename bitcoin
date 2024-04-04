@@ -16,6 +16,9 @@ alias btools="brew install ccache llvm berkeley-db@4 automake boost \
               libevent libnatpmp libtool miniupmpc pkg-config python \
               qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov"
 
+# Make sure you are using the latest python 3 release first
+alias bpips="python -m pip install pyzmq"
+
 #-----------------------------------------------------------------------------#
 #                                    EXPORTS                                  #
 #-----------------------------------------------------------------------------#
@@ -28,7 +31,7 @@ export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
 
 # System info
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
-export NCORES_FIXED_=4
+export NCORES_FIXED_=64
 
 # Bitcoin paths
 export BPATH_="~/Documents/projects/bitcoin/bitcoin"
@@ -105,10 +108,21 @@ alias bdocs-clean="make clean-docs"
 
 ### Functional tests
 
-# Functional tests, append the --extended, --coverage flags as needed
-# Caution! Using NCORES_ with functional tests which is 13 on M2 Pro Max 
-# some tests fail
-alias btest="test/functional/test_runner.py -j $NCORES_FIXED_" 
+# Functional tests, append --jobs=XX --extended, --coverage flags as needed
+
+# TODO: add optimum core number
+alias btest-run="test/functional/test_runner.py" 
+alias btest-clear="rm -rf test/cache; pkill -9 bitcoind;"
+
+# Createe a RAM disk (4 GiB) to speed up testing
+# { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
+alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://8388608)"
+alias btest-ram="test/functional/test_runner.py --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
+alias bdestroy-ram="umount /Volumes/ramdisk"
+# All that combined
+alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
+# Using `--extended --jobs=4`, if jobs >12 some tests fail
+alias btest-ext="bcreate-ram && btest-ram --extended && bdestroy-ram" 
 
 # Clean up node seeding and debug files after manual tests
 alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"
@@ -137,7 +151,7 @@ export -f bdestroy-tmp
 alias bb="bconfigure && bclean && bmake && bcheck && btest"
 
 # 2. Build and run unit and exetended functional tests
-alias bbe="bconfigure && bclean && bmake && bcheck && btest --extended"
+alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
 
 #-----------------------------------------------------------------------------#
 #                                 LIGHTNING                                   #
@@ -145,3 +159,6 @@ alias bbe="bconfigure && bclean && bmake && bcheck && btest --extended"
 
 # Lightning with config file
 alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
+
+# Clear all output generatied by this file
+clear

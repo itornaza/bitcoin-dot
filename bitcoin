@@ -1,6 +1,6 @@
 ###############################################################################
 #                            Bitcoin Core dot file                            #
-#                         (`b` - prefix for bitcoin)                          #
+#                     (`b` and `B` - prefixes for bitcoin)                    #
 ###############################################################################
 
 # This configuration is intended for macos
@@ -144,8 +144,8 @@ alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes
 alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
 
 # Extended functional tests
-# If jobs > 12 some tests fail, the default 4 jobs execute faster
-# Caution! With ramdisk makes all tests fail
+# Caution (1)! If jobs > 12 some tests fail, the default 4 jobs execute faster
+# Caution (2)! With ramdisk makes all tests fail
 alias btest-ext="btest-plain --extended" 
 
 #-----------------------------------------------------------------------------#

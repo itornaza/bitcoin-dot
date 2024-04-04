@@ -1,6 +1,6 @@
 ###############################################################################
 #                            Bitcoin Core dot file                            #
-#                           (b - prefix for bitcoin)                          #
+#                         (`b` - prefix for bitcoin)                          #
 ###############################################################################
 
 # This configuration is intended for macos
@@ -21,7 +21,15 @@ alias bpips="python -m pip install pyzmq"
 
 #-----------------------------------------------------------------------------#
 #                                    EXPORTS                                  #
+#                  (`_` - suffix for all variables in this file)              #
 #-----------------------------------------------------------------------------#
+
+# Bitcoin paths
+export BPATH_="~/Documents/projects/bitcoin/bitcoin"
+export BDATA_="~/Library/Application\ Support/Bitcoin"
+export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
+export BTEST_="$BPATH_/test"
+export BFUNC_="$BTEST_/functional"
 
 # System tools
 export ED_=code # or vim
@@ -33,10 +41,11 @@ export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
 export NCORES_FIXED_=64
 
-# Bitcoin paths
-export BPATH_="~/Documents/projects/bitcoin/bitcoin"
-export BDATA_="~/Library/Application\ Support/Bitcoin"
-export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of this file
+# RAM disc size calc: { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
+export RAMDISK_SIZE_=8388608
+
+# Image size calc: { 13 * 1024 = 113312 MiB for 13 GiB }
+export IMAGE_SIZE_=11312
 
 #-----------------------------------------------------------------------------#
 #                                 PATH ALIASES                                #
@@ -106,25 +115,15 @@ alias bcov="make cov"
 alias bdocs="make docs"
 alias bdocs-clean="make clean-docs"
 
-### Functional tests
+### Functional test environment support
 
-# Functional tests, append --jobs=XX --extended, --coverage flags as needed
-alias btest-run="test/functional/test_runner.py" 
-alias btest-clean="rm -rf test/cache; pkill -9 bitcoind;"
-
-# Createe a RAM disk (4 GiB) to speed up testing
-# { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
-alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://8388608)"
-alias btest-ram="test/functional/test_runner.py --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
+# RAM disk to speed up testing
+alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
 alias bdestroy-ram="umount /Volumes/ramdisk"
 
-# All functional tests without extra flags
-alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
-
-# All functional and extended tests
-# - if jobs > 12 some tests fail, the default 4 jobs execute faster
-# - Run with a ramdisk makes all tests fail
-alias btest-ext="btest-run --extended" 
+# Partition for size controlled testing
+alias bcreate-tmp="hdiutil create -megabytes $IMAGE_SIZE_ -fs HFS+ -volname tmp ~/tmp.dmg; hdiutil attach ~/tmp.dmg"
+alias bdestroy-tmp="hdiutil detach /Volumes/tmp; rm -fr ~/tmp.dmg;"
 
 # Clean up node seeding and debug files after manual tests
 alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"
@@ -132,28 +131,36 @@ alias bdata-clear-test="rm -fr $BDATA_/testnet3/anchors.dat $BDATA_/testnet3/pee
 alias bdata-clear-signet="rm -fr $BDATA_/signet/anchors.dat $BDATA_/signet/peers.dat $BDATA_/signet/debug.log"
 alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/peers.dat $BDATA_/regtest/debug.log"
 
-# Create image with predefined size to provide a controlled testing environment
-bcreate-tmp() {
-  hdiutil create -megabytes $1 -fs HFS+ -volname tmp ~/tmp.dmg
-  hdiutil attach ~/tmp.dmg
-}
-export -f bcreate-tmp
-# and destroy for proper housekeeping
-bdestroy-tmp() {
-  hdiutil detach /Volumes/tmp
-  rm -fr ~/tmp.dmg
-}
-export -f bdestroy-tmp
+# Clean up test environment
+alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
+
+### Functional tests
+
+# Functional tests (--jobs=XX --extended, --coverage flags as needed)
+alias btest-plain="$BFUNC_/test_runner.py"
+
+# Functional tests with Ramdisk support and no extra flags
+alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
+alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
+
+### Extended functional tests
+
+# - if jobs > 12 some tests fail, the default 4 jobs execute faster
+# - Run with a ramdisk makes all tests fail
+alias btest-ext="btest-plain --extended" 
 
 #-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #
 #-----------------------------------------------------------------------------#
 
-# 1. Build and run unit and functional tests
+# Build and run unit and functional tests (most common option)
 alias bb="bconfigure && bclean && bmake && bcheck && btest"
 
-# 2. Build and run unit and exetended functional tests
+# Build and run unit and exetended functional tests (takes longer...)
 alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
+
+# Clean up everything in the build and test chains in case of trouble
+alias bclean-all="bclean; bcache-clean; btest-clean;"
 
 #-----------------------------------------------------------------------------#
 #                                 LIGHTNING                                   #
@@ -161,6 +168,3 @@ alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
 
 # Lightning with config file
 alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"
-
-# Clear all output generatied by this file
-clear

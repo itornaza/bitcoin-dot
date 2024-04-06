@@ -2,10 +2,10 @@
 #                            Bitcoin Core dot file                            #
 #                     (`b` and `B` - prefixes for bitcoin)                    #
 ###############################################################################
-
-# This configuration is intended for macos
-# To include it in your shell write the following line in ~/.zshrc 
-# source <path_to_this_file>
+# - Intended for macos but can be easily modified for BSD and Linux
+# - To include it in your shell write the following line in ~/.zshrc 
+#   `source <path_to_this_file>`
+# - For more procedural options go to the bottom of the file
 
 #-----------------------------------------------------------------------------#
 #                                    SETUP                                    #
@@ -20,7 +20,7 @@ alias btools="brew install ccache llvm berkeley-db@4 automake boost \
 alias bpips="python -m pip install pyzmq"
 
 #-----------------------------------------------------------------------------#
-#                                    EXPORTS                                  #
+#                                   VARIABLES                                 #
 #                  (`_` - suffix for all variables in this file)              #
 #-----------------------------------------------------------------------------#
 
@@ -52,7 +52,7 @@ export RAMDISK_SIZE_=8388608
 export RAMDISK_SIZE_EXT_=25165824
 
 #-----------------------------------------------------------------------------#
-#                                 PATH ALIASES                                #
+#                                     PATHS                                   #
 #-----------------------------------------------------------------------------#
 
 # Bitcoin paths
@@ -69,7 +69,7 @@ alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 
 #-----------------------------------------------------------------------------#
-#                               COMMAND ALIASES                               #
+#                                    COMMANDS                                 #
 #-----------------------------------------------------------------------------#
 
 ### bitcoind and bitcoin-cli
@@ -138,16 +138,17 @@ alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
 ### Functional test run
 
-# Functional tests (--jobs=XX --extended, --coverage flags as needed)
+# Functional tests
 alias btest-plain="$BFUNC_/test_runner.py"
 
-# Chain functional tests with ramdisk support
+# Attach ramdisk support to functional tests
+# Note: Have to manually create and destroy the ramdisk
 alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
 
-# Functional tests (optimum configuration)
+# Functional tests (optimum standalone configuration)
 alias btest="bcreate-ram && btest-ram --jobs=$NCORES_64_ && bdestroy-ram"
 
-# Extended functional tests (optimum configuration)
+# Extended functional tests (optimum standalone configuration)
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NCORES_16_ --extended && bdestroy-ram"
 
 #-----------------------------------------------------------------------------#
@@ -157,15 +158,8 @@ alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NCORES_16_ --extended && b
 # Build and run unit and functional tests (most common option)
 alias bb="bconfigure && bclean && bmake && bcheck && btest"
 
-# Build and run unit and exetended functional tests (takes longer...)
+# Build and run unit and exetended functional tests (takes a little longer...)
 alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
 
 # Clean up everything in the build and test chains in case of trouble
 alias bclean-all="bclean; bcache-clean; btest-clean;"
-
-#-----------------------------------------------------------------------------#
-#                                 LIGHTNING                                   #
-#-----------------------------------------------------------------------------#
-
-# Lightning with config file
-alias lightning="lnd --configfile=~/Documents/config/chaincode/lnd.conf;"

@@ -30,6 +30,7 @@ export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
 export BFUNC_="$BTEST_/functional"
+export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
 
 # System tools
 export ED_=code # or vim
@@ -39,13 +40,16 @@ export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
 
 # System info
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
-export NCORES_FIXED_=64
+export NJOBS_16_=16
+export NJOBS_64_=64
 
-# RAM disc size calc: { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
+# RAM disc to be used with normal functional tests
+# Size calc: { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
 export RAMDISK_SIZE_=8388608
 
-# Image size calc: { 13 * 1024 = 113312 MiB for 13 GiB }
-export IMAGE_SIZE_=11312
+# RAM disc to be used with normal extended functional tests
+# Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
+export RAMDISK_SIZE_EXT_=25165824
 
 #-----------------------------------------------------------------------------#
 #                                 PATH ALIASES                                #
@@ -55,6 +59,7 @@ export IMAGE_SIZE_=11312
 alias b="cd $BPATH_;pwd"
 alias bdata="cd $BDATA_;pwd"
 alias bdot="cd $BDOT_;pwd"
+alias btestlogs="cd $BTEST_LOGS_"
 
 # Open Bitcoin files
 alias bconf="$ED_ $BDATA_/bitcoin.conf"
@@ -91,7 +96,7 @@ alias bdiff="git difftool origin/master " # <plus the file>
 alias breset="git reset --hard HEAD; git clean -fd;"
 
 # Get all new changes from origin
-alias bmerge="git checkout master; git fetch origin; git merge;"
+alias bupdate="git checkout master; git fetch origin; git merge;"
 
 ### Build 
 
@@ -117,13 +122,10 @@ alias bdocs-clean="make clean-docs"
 
 ### Functional test environment support
 
-# RAM disk to speed up testing
+# RAM disk to speed up or constraint testing environment size
 alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
+alias bcreate-ram-ext="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_EXT_)"
 alias bdestroy-ram="umount /Volumes/ramdisk"
-
-# Partition for size controlled testing
-alias bcreate-tmp="hdiutil create -megabytes $IMAGE_SIZE_ -fs HFS+ -volname tmp ~/tmp.dmg; hdiutil attach ~/tmp.dmg"
-alias bdestroy-tmp="hdiutil detach /Volumes/tmp; rm -fr ~/tmp.dmg;"
 
 # Clean up node seeding and debug files after manual tests
 alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"
@@ -139,14 +141,14 @@ alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 # Functional tests (--jobs=XX --extended, --coverage flags as needed)
 alias btest-plain="$BFUNC_/test_runner.py"
 
-# Functional tests with Ramdisk support and no extra flags
+# Chain functional tests with ramdisk support
 alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
-alias btest="bcreate-ram && btest-ram --jobs=$NCORES_FIXED_ && bdestroy-ram"
 
-# Extended functional tests
-# Caution (1)! If jobs > 12 some tests fail, the default 4 jobs execute faster
-# Caution (2)! With ramdisk makes all tests fail
-alias btest-ext="btest-plain --extended" 
+# Functional tests (optimum configuration)
+alias btest="bcreate-ram && btest-ram --jobs=$NCORES_64_ && bdestroy-ram"
+
+# Extended functional tests (optimum configuration)
+alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NCORES_16_ --extended && bdestroy-ram"
 
 #-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #

@@ -6,6 +6,7 @@
 # - To include it in your shell write the following line in ~/.zshrc 
 #   `source <path_to_this_file>`
 # - For more procedural options go to the bottom of the file
+# - Read all the `Caution!` contained in the file before using it
 
 #-----------------------------------------------------------------------------#
 #                                    SETUP                                    #
@@ -40,6 +41,9 @@ export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
 
 # System info
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
+
+# Number of jobs for parallel testing
+# ** Caution! ** Optimised for my system, you may begin with smaller numbers
 export NJOBS_16_=16
 export NJOBS_64_=64
 
@@ -49,6 +53,7 @@ export RAMDISK_SIZE_=8388608
 
 # RAM disc to be used with normal extended functional tests
 # Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
+# ** Caution! ** Check how much RAM your system supports first 
 export RAMDISK_SIZE_EXT_=25165824
 
 #-----------------------------------------------------------------------------#
@@ -90,7 +95,8 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 # Show diffs of a file copmared to the original version
 # Note: Set up the editor git uses for difftool and mergetool
 # https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-alias bdiff="git difftool origin/master " # <plus the file>
+alias bdiff-orig="git difftool origin/master " # <plus the file>
+alias bdiff="git difftool master " # <plus the file>
 
 # Reset any changes and remove new files since the last commit
 alias breset="git reset --hard HEAD; git clean -fd;"
@@ -146,14 +152,16 @@ alias btest-plain="$BFUNC_/test_runner.py"
 alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
 
 # Functional tests (optimum standalone configuration)
-alias btest="bcreate-ram && btest-ram --jobs=$NCORES_64_ && bdestroy-ram"
+alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
 # Extended functional tests (optimum standalone configuration)
-alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NCORES_16_ --extended && bdestroy-ram"
+alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$JOBS_16_ --extended && bdestroy-ram"
 
 #-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #
 #-----------------------------------------------------------------------------#
+
+# Go to the bitcoin core project root directory
 
 # Build and run unit and functional tests (most common option)
 alias bb="bconfigure && bclean && bmake && bcheck && btest"

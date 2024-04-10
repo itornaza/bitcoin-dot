@@ -92,6 +92,10 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 
 ### Git
 
+# Search for pattern in a repository
+# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
+alias bgg="git grep -n" # <pattern> <option: branch if on master>
+
 # Show diffs of a file copmared to the original version
 # Note: Set up the editor git uses for difftool and mergetool
 # https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
@@ -155,7 +159,7 @@ alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes
 alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
 # Extended functional tests (optimum standalone configuration)
-alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$JOBS_16_ --extended && bdestroy-ram"
+alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bdestroy-ram"
 
 #-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #

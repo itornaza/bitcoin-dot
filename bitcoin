@@ -2,11 +2,12 @@
 #                            Bitcoin Core dot file                            #
 #                     (`b` and `B` - prefixes for bitcoin)                    #
 ###############################################################################
-# - Intended for macos but can be easily modified for BSD and Linux
-# - To include it in your shell write the following line in ~/.zshrc 
-#   `source <path_to_this_file>`
-# - For more procedural options go to the bottom of the file
-# - Read all the `Caution!` contained in the file before using it
+# 1. Intended for macos but can be easily modified for other UNIX and Linux   #
+# 2. To include it in your shell write the following line in ~/.zshrc         #
+#    `source <path_to_this_file>`                                             #
+# 3. For more procedural options go to the bottom of the file                 #
+# 4. Read all the `Caution!` contained in the file before using it            #
+###############################################################################
 
 #-----------------------------------------------------------------------------#
 #                                    SETUP                                    #
@@ -15,7 +16,8 @@
 # Install brew dependencies
 alias btools="brew install ccache llvm berkeley-db@4 automake boost \
               libevent libnatpmp libtool miniupmpc pkg-config python \
-              qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov"
+              qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov \
+              bear"
 
 # Make sure you are using the latest python 3 release first
 alias bpips="python -m pip install pyzmq"
@@ -32,12 +34,18 @@ export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
 export BFUNC_="$BTEST_/functional"
 export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
+export BDOX_="$BPATH_/doc/doxygen/html"
 
-# System tools
+# System tools (overkill, but better be safe than sorry)
 export ED_=code # or vim
 export BC_=/opt/homebrew/opt/llvm/bin/clang
+export BRCT_=/opt/homebrew/opt/llvm/bin/run-clang-tidy
 export BCPP_=/opt/homebrew/opt/llvm/bin/clang++
 export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
+
+# Export the LLVM Brew path in order to overide the system default LLVM
+# clang-tidy is now also dscoverable by bear
+export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
 # System info
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
@@ -57,14 +65,14 @@ export RAMDISK_SIZE_=8388608
 export RAMDISK_SIZE_EXT_=25165824
 
 #-----------------------------------------------------------------------------#
-#                                     PATHS                                   #
+#                                PATHS AND FILES                              #
 #-----------------------------------------------------------------------------#
 
 # Bitcoin paths
 alias b="cd $BPATH_;pwd"
 alias bdata="cd $BDATA_;pwd"
 alias bdot="cd $BDOT_;pwd"
-alias btestlogs="cd $BTEST_LOGS_"
+alias btestlogs="cd $BTEST_LOGS_;pwd"
 
 # Open Bitcoin files
 alias bconf="$ED_ $BDATA_/bitcoin.conf"
@@ -72,6 +80,9 @@ alias blog-main="$ED_ $BDATA_/debug.log"
 alias blog-test="$ED_ $BDATA_/testnet3/debug.log"
 alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
+
+# View doxygen generated documentation on firefox
+alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
 #                                    COMMANDS                                 #
@@ -123,12 +134,9 @@ alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --enable-f
 
 # Make
 alias bclean="make clean"
-alias bcache-clean="ccache -C"
 alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check"
-alias bcov="make cov"
-alias bdocs="make docs"
-alias bdocs-clean="make clean-docs"
+alias bcache-clean="ccache -C"
 
 ### Functional test environment support
 
@@ -160,6 +168,19 @@ alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
 # Extended functional tests (optimum standalone configuration)
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bdestroy-ram"
+
+# Test coverage (TODO: Check llvm-cov instead)
+alias bcov="make cov"
+
+### Documentation and style
+
+# Doxygen (run from the project root)
+alias bdox-make="make docs"
+alias bdox-clean="make clean-docs"
+
+# Apply required cpp coding style
+alias bct-make="make clean && bear --config src/.bear-tidy-config -- make -j $NCORES_"
+alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 
 #-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #

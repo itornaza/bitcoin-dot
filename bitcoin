@@ -183,6 +183,13 @@ alias bct-make="make clean && bear --config src/.bear-tidy-config -- make -j $NC
 alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 
 #-----------------------------------------------------------------------------#
+#                               TROUBLESHOOTING                               #
+#-----------------------------------------------------------------------------#
+
+# Clean up everything in the build and test chains in case of trouble
+alias bclean-all="bclean; bcache-clean; btest-clean;"
+
+#-----------------------------------------------------------------------------#
 #                             REVIEW PROCEDURES                               #
 #-----------------------------------------------------------------------------#
 
@@ -194,5 +201,5 @@ alias bb="bconfigure && bclean && bmake && bcheck && btest"
 # Build and run unit and exetended functional tests (takes a little longer...)
 alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
 
-# Clean up everything in the build and test chains in case of trouble
-alias bclean-all="bclean; bcache-clean; btest-clean;"
+# Reset the bitcoin repo before going to sleep
+alias bbye="breset;bupdate"

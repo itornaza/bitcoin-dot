@@ -103,21 +103,21 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 
 ### Git
 
-# Search for pattern in a repository
-# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
-alias bgg="git grep -n" # <pattern> <option: branch if on master>
-
-# Show diffs of a file copmared to the original version
-# Note: Set up the editor git uses for difftool and mergetool
-# https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-alias bdiff-orig="git difftool origin/master " # <plus the file>
-alias bdiff="git difftool master " # <plus the file>
+# Get all new changes from origin
+alias bupdate="git checkout master; git fetch origin; git merge;"
 
 # Reset any changes and remove new files since the last commit
 alias breset="git reset --hard HEAD; git clean -fd;"
 
-# Get all new changes from origin
-alias bupdate="git checkout master; git fetch origin; git merge;"
+# Search for pattern in a repository
+# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
+alias bgg="git grep -n" # <pattern> <option: branch name if on master>
+
+# Show diffs of a file compared to the original version
+# - Set up the editor git uses for difftool and mergetool following
+#   https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
+alias bdiff-orig="git difftool origin/master " # <plus the file>
+alias bdiff="git difftool master " # <plus the file>
 
 ### Build 
 

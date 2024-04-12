@@ -28,6 +28,11 @@ The main sources for the compilation of this file comes straight from Bitcoin Co
 
 and Jon Atack's blog: 
 
-[ How to compile Bitcoin Core and run the unit and functional tests ](https://jonatack.github.io/articles/how-to-compile-bitcoin-core-and-run-the-tests)
+[How to compile Bitcoin Core and run the unit and functional tests](https://jonatack.github.io/articles/how-to-compile-bitcoin-core-and-run-the-tests)
 
 [How to Review Pull Requests in Bitcoin Core](https://jonatack.github.io/articles/how-to-review-pull-requests-in-bitcoin-core)
+
+## Lisence
+
+`Bitcoin dot file` is released under the terms of the MIT license. See [LISENCE](LISENCE.md) for more
+information or see https://opensource.org/licenses/MIT.

@@ -22,6 +22,15 @@ alias btools="brew install ccache llvm berkeley-db@4 automake boost \
 # Make sure you are using the latest python 3 release first
 alias bpips="python -m pip install pyzmq"
 
+# Git difftool and mergetool default editor set up to vs code (default is vim)
+bg-ed-setup() {
+    git config --global diff.tool vscode
+    git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
+    git config --global merge.tool vscode
+    git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+}
+alias bg-ed="git config --global -e"
+
 #-----------------------------------------------------------------------------#
 #                                   VARIABLES                                 #
 #                  (`_` - suffix for all variables in this file)              #
@@ -88,7 +97,7 @@ alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 #                                    COMMANDS                                 #
 #-----------------------------------------------------------------------------#
 
-### bitcoind and bitcoin-cli
+#-----------------------=== bitcoind and bitcoin-cli ===----------------------#
 
 # GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
 # Build with `make install` and only for the latest stable release!
@@ -101,7 +110,7 @@ alias bd="$BPATH_/src/bitcoind"
 alias bcli="$BPATH_/src/bitcoin-cli"
 alias bclin="$BPATH_/src/bitcoin-cli -named"
 
-### Git
+#------------------------------===<<< Git >>>===------------------------------#
 
 # Get all new changes from origin and update the local repository
 alias bgupdate="git checkout master; git fetch origin; git merge;"
@@ -117,7 +126,6 @@ alias bglast="git rev-parse HEAD"
 alias bgfirst="git log --reverse | head -n 1"
 
 # Search for pattern in a repository
-# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
 alias bgg="git grep -n" # <pattern> <option: branch name if on master>
 
 # Files that have differences for a number of commits back, default is 1
@@ -132,15 +140,12 @@ bgd-files() {
 # Files that have differences between this branch and master
 alias bgd-files-master="git diff --name-only origin/master HEAD"
 
-# git difftool and mergetool default editor set up at
-# https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-
 # Show diffs of a file on current branch file compared to master 
 # git difftool <commit-to-compare-with> <file>
 # git difftool <commit1> <commit2> -- <file>
 alias bgd-tool="git difftool origin/master " # <file>
 
-### Build 
+#------------------------------===<<< Build >>>===----------------------------#
 
 # LLVM used with ccache by default
 alias bc=$BC_ 
@@ -159,7 +164,7 @@ alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check"
 alias bcache-clean="ccache -C"
 
-### Functional test environment support
+#---------------===<<< Functional test environment support >>>===-------------#
 
 # RAM disk to speed up or constraint testing environment size
 alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
@@ -175,7 +180,7 @@ alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/pe
 # Clean up test environment
 alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
-### Functional test run
+#-----------------------===<<< Functional test run >>>===---------------------#
 
 # Functional tests
 alias btest-plain="$BFUNC_/test_runner.py"
@@ -193,7 +198,7 @@ alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bd
 # Test coverage (TODO: Check llvm-cov instead)
 alias bcov="make cov"
 
-### Documentation and style
+#---------------------===<<< Documentation and style >>>===-------------------#
 
 # Doxygen (run from the project root)
 alias bdox-make="make docs"

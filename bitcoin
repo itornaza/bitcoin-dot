@@ -116,8 +116,12 @@ alias bgname="git branch --show-current"
 alias bglast="git rev-parse HEAD"
 alias bgfirst="git log --reverse | head -n 1"
 
-# Files that have differences for a number if commits back, default is 1
-bgdiff-files() { 
+# Search for pattern in a repository
+# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
+alias bgg="git grep -n" # <pattern> <option: branch name if on master>
+
+# Files that have differences for a number of commits back, default is 1
+bgd-files() { 
     if [ $# -eq 0 ]; then
         git diff --name-only HEAD HEAD~1
     else
@@ -125,15 +129,16 @@ bgdiff-files() {
     fi
 }
 
-# Search for pattern in a repository
-# https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
-alias bgg="git grep -n" # <pattern> <option: branch name if on master>
+# Files that have differences between this branch and master
+alias bgd-files-master="git diff --name-only origin/master HEAD"
 
-# Show diffs of a file compared to the original version
-# - Set up the editor git uses for difftool and mergetool following
-#   https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-alias bgdifftool-orig="git difftool origin/master " # <plus the file>
-alias bgdifftool="git difftool master " # <plus the file>
+# git difftool and mergetool default editor set up at
+# https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
+
+# Show diffs of a file on current branch file compared to master 
+# git difftool <commit-to-compare-with> <file>
+# git difftool <commit1> <commit2> -- <file>
+alias bgd-tool="git difftool origin/master " # <file>
 
 ### Build 
 
@@ -199,14 +204,14 @@ alias bct-make="make clean && bear --config src/.bear-tidy-config -- make -j $NC
 alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 
 #-----------------------------------------------------------------------------#
-#                               TROUBLESHOOTING                               #
+#                              TROUBLESHOOTING                                #
 #-----------------------------------------------------------------------------#
 
 # Clean up everything in the build and test chains in case of trouble
-alias bclean-all="bclean; bcache-clean; btest-clean;"
+alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #-----------------------------------------------------------------------------#
-#                             REVIEW PROCEDURES                               #
+#                              REVIEW PROCEDURES                              #
 #-----------------------------------------------------------------------------#
 
 # Go to the bitcoin core project root directory

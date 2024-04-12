@@ -103,11 +103,27 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 
 ### Git
 
-# Get all new changes from origin
-alias bupdate="git checkout master; git fetch origin; git merge;"
+# Get all new changes from origin and update the local repository
+alias bgupdate="git checkout master; git fetch origin; git merge;"
 
 # Reset any changes and remove new files since the last commit
-alias breset="git reset --hard HEAD; git clean -fd;"
+alias bgreset="git reset --hard HEAD; git clean -fd;"
+
+# Name of the current branch
+alias bgname="git branch --show-current"
+
+# Commit hashes of the first and last commits
+alias bglast="git rev-parse HEAD"
+alias bgfirst="git log --reverse | head -n 1"
+
+# Files that have differences for a number if commits back, default is 1
+bgdiff-files() { 
+    if [ $# -eq 0 ]; then
+        git diff --name-only HEAD HEAD~1
+    else
+        git diff --name-only HEAD HEAD~$1 
+    fi
+}
 
 # Search for pattern in a repository
 # https://www.kosli.com/blog/git-grep-like-a-pro-the-complete-guide/
@@ -116,8 +132,8 @@ alias bgg="git grep -n" # <pattern> <option: branch name if on master>
 # Show diffs of a file compared to the original version
 # - Set up the editor git uses for difftool and mergetool following
 #   https://www.roboleary.net/vscode/2020/09/15/vscode-git.html
-alias bdiff-orig="git difftool origin/master " # <plus the file>
-alias bdiff="git difftool master " # <plus the file>
+alias bgdifftool-orig="git difftool origin/master " # <plus the file>
+alias bgdifftool="git difftool master " # <plus the file>
 
 ### Build 
 

@@ -6,35 +6,17 @@
 # 2. To include it in your shell write the following line in ~/.zshrc         #
 #    `source <path_to_this_file>`                                             #
 # 3. For more procedural options go to the bottom of the file                 #
-# 4. Read all the `Caution!` contained in the file before using it            #
+# 4. Read all `Caution!` contained in the file before use                     #
 ###############################################################################
-
-#-----------------------------------------------------------------------------#
-#                                    SETUP                                    #
-#-----------------------------------------------------------------------------#
-
-# Install brew dependencies
-alias btools="brew install ccache llvm berkeley-db@4 automake boost \
-              libevent libnatpmp libtool miniupmpc pkg-config python \
-              qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov \
-              bear"
-
-# Make sure you are using the latest python 3 release first
-alias bpips="python -m pip install pyzmq"
-
-# Git difftool and mergetool default editor set up to vs code (default is vim)
-bg-ed-setup() {
-    git config --global diff.tool vscode
-    git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
-    git config --global merge.tool vscode
-    git config --global mergetool.vscode.cmd 'code --wait $MERGED'
-}
-alias bg-ed="git config --global -e"
 
 #-----------------------------------------------------------------------------#
 #                                   VARIABLES                                 #
 #                  (`_` - suffix for all variables in this file)              #
 #-----------------------------------------------------------------------------#
+
+# Export the LLVM Brew path in order to overide the system default LLVM
+# clang-tidy is now also dscoverable by bear
+export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
 # Bitcoin paths
 export BPATH_="~/Documents/projects/bitcoin/bitcoin"
@@ -45,16 +27,12 @@ export BFUNC_="$BTEST_/functional"
 export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
 export BDOX_="$BPATH_/doc/doxygen/html"
 
-# System tools (overkill, but better be safe than sorry)
+# System tools
 export ED_=code # or vim
 export BC_=/opt/homebrew/opt/llvm/bin/clang
 export BRCT_=/opt/homebrew/opt/llvm/bin/run-clang-tidy
 export BCPP_=/opt/homebrew/opt/llvm/bin/clang++
 export BLLDB_=/opt/homebrew/opt/llvm/bin/lldb
-
-# Export the LLVM Brew path in order to overide the system default LLVM
-# clang-tidy is now also dscoverable by bear
-export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
 # System info
 export NCORES_="$(($(sysctl -n hw.physicalcpu)+1))"
@@ -72,6 +50,37 @@ export RAMDISK_SIZE_=8388608
 # Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
 # ** Caution! ** Check how much RAM your system supports first 
 export RAMDISK_SIZE_EXT_=25165824
+
+#-----------------------------------------------------------------------------#
+#                                    SETUP                                    #
+#-----------------------------------------------------------------------------#
+
+# Install brew dependencies
+alias btools="brew install ccache llvm berkeley-db@4 automake boost \
+              libevent libnatpmp libtool miniupmpc pkg-config python \
+              qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov \
+              bear clang-format flake8 mypy codespell vulture"
+
+# Upadte all installed brew packages
+btools-update() {
+    brew update; 
+    echo "Running brew upgrade..."
+    brew upgrade; 
+    echo "Running brew cleanup..."
+    brew cleanup;
+}
+
+# Make sure you are using the latest python 3 release first with `which python`
+alias bpips="python -m pip install pyzmq"
+
+# Git difftool and mergetool default editor set up to vs code (default is vim)
+bg-ed-setup() {
+    git config --global diff.tool vscode
+    git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
+    git config --global merge.tool vscode
+    git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+}
+alias bg-ed="git config --global -e"
 
 #-----------------------------------------------------------------------------#
 #                                PATHS AND FILES                              #
@@ -94,10 +103,8 @@ alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
-#                                    COMMANDS                                 #
+#                           BITCOIND AND BITCOIN-CLI                          #
 #-----------------------------------------------------------------------------#
-
-#-----------------------=== bitcoind and bitcoin-cli ===----------------------#
 
 # GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
 # Build with `make install` and only for the latest stable release!
@@ -110,26 +117,30 @@ alias bd="$BPATH_/src/bitcoind"
 alias bcli="$BPATH_/src/bitcoin-cli"
 alias bclin="$BPATH_/src/bitcoin-cli -named"
 
-#------------------------------===<<< Git >>>===------------------------------#
+#-----------------------------------------------------------------------------#
+#                                     GIT                                     #
+#-----------------------------------------------------------------------------#
+# - All commands prefixed with: bg
 
 # Get all new changes from origin and update the local repository
-alias bgupdate="git checkout master; git fetch origin; git merge;"
+alias bg-update="git checkout master; git fetch origin; git merge;"
 
 # Reset any changes and remove new files since the last commit
-alias bgreset="git reset --hard HEAD; git clean -fd;"
+alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
 # Name of the current branch
-alias bgname="git branch --show-current"
+alias bg-name="git branch --show-current"
 
 # Commit hashes of the first and last commits
-alias bglast="git rev-parse HEAD"
-alias bgfirst="git log --reverse | head -n 1"
+alias bg-last="git rev-parse HEAD"
+alias bg-first="git log --reverse | head -n 1"
 
 # Search for pattern in a repository
-alias bgg="git grep -n" # <pattern> <option: branch name if on master>
+alias bgg="git grep -n " # <pattern> <option: branch name if on master>
 
-# Files that have differences for a number of commits back, default is 1
+# Differences to a given number of commits back, default is 1
 bgd-files() { 
+    # $1: Number of commits backwards
     if [ $# -eq 0 ]; then
         git diff --name-only HEAD HEAD~1
     else
@@ -142,10 +153,51 @@ alias bgd-files-master="git diff --name-only origin/master HEAD"
 
 # Show diffs of a file on current branch file compared to master 
 # git difftool <commit-to-compare-with> <file>
-# git difftool <commit1> <commit2> -- <file>
 alias bgd-tool="git difftool origin/master " # <file>
+# git difftool <commit1> <commit2> -- <file>
 
-#------------------------------===<<< Build >>>===----------------------------#
+# List all tracked files in the repository
+alias bg-ls="git ls-files"
+
+# Get the commit which changed last a line in a file
+bg-blame() {
+    # $1: line number
+    # $2: file path
+    git blame -L$1,$1 $2
+}
+
+# Get all the commits that changed the file provided as argument
+alias bg-log-p="git log -p " # <path>
+
+# Search commits the item (ex. a function name) is modified
+alias bg-log-s="git log -S " # <item>
+
+# Search commits the item (ex. a function name) is moved
+alias bg-log-g="git log -G " # <item>
+
+# Trace a span of lines in a file 
+bg-log-l() {
+    # $1: start line
+    # $2: end line
+    # $3: file path
+    git log -L $1,$2:$3
+}
+
+# Follow the history of a file even if it was renamed at some point
+alias bg-log-follow="git log --follow " # <path>
+
+# See the history of a removed file
+alias bg-log-removed="git log -- "
+
+# Get the PR discussion from a commit hash
+bg-logpr() {
+    # $1: commit hash
+    git log --merges --reverse --oneline --ancestry-path $1..origin/master | head -n 1
+}
+
+#-----------------------------------------------------------------------------#
+#                                    BUILD                                    #
+#-----------------------------------------------------------------------------#
 
 # LLVM used with ccache by default
 alias bc=$BC_ 
@@ -159,12 +211,17 @@ alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --with-in
 alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 
 # Make
+alias bdistclean="make distclean" # Includes make clean as well
 alias bclean="make clean"
 alias bmake="make -j $NCORES_"
-alias bcheck="make -j $NCORES_ check"
+alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
-#---------------===<<< Functional test environment support >>>===-------------#
+#-----------------------------------------------------------------------------#
+#                                    TESTS                                    #
+#-----------------------------------------------------------------------------#
+
+#---------------------------===<<< Test support >>>===------------------------#
 
 # RAM disk to speed up or constraint testing environment size
 alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
@@ -180,7 +237,32 @@ alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/pe
 # Clean up test environment
 alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
-#-----------------------===<<< Functional test run >>>===---------------------#
+#----------------------------===<<< Unit tests >>>===-------------------------#
+
+# bmake (i.e. make check) above runs both the unit and util tests
+
+# Run the unit test without re-compiling
+btest-unit() {
+    b # Bitcoin path alias
+    cd src/test/
+    test_bitcoin
+    b
+}
+
+# Run util tests without recompiling
+# TODO: Does not find config.ini file
+alias btest-util="$BPATH_/test/util/test_runner.py"
+
+#----------------------------===<<< Lint checks >>>===------------------------#
+
+# Run locally all the lint checks that the CI does on Github
+btest-lint() {
+    b # Bitcoin path alias
+    cd test/lint/test_runner && cargo fmt && cargo clippy && cargo run
+    b
+}
+
+#-------------------------===<<< Functional tests >>>===----------------------#
 
 # Functional tests
 alias btest-plain="$BFUNC_/test_runner.py"
@@ -195,37 +277,62 @@ alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 # Extended functional tests (optimum standalone configuration)
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bdestroy-ram"
 
-# Test coverage (TODO: Check llvm-cov instead)
-alias bcov="make cov"
+# Coverage for the exteded functional tests to uncover missing rpcs from harness
+alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended --coverage && bdestroy-ram"
 
-#---------------------===<<< Documentation and style >>>===-------------------#
+#---------------------------===<<< Test reports >>>===------------------------#
+
+# Unit test coverage report
+alias btest-report="open -a /Applications/Firefox.app $BPATH_/test_bitcoin.coverage/index.html"
+
+# Unit and functional test coverage report
+alias btest-report-total="open -a /Applications/Firefox.app $BPATH_/total.coverage/index.html"
+
+# Test coverage
+# TODO: cannot make coverage work yet!
+bcov() {
+    bconfigure-debug --enable-lcov
+    bmake
+    make check
+    make cov
+}
+
+#-----------------------------------------------------------------------------#
+#                       DOCUMENTATION AND CODING STYLE                        #
+#-----------------------------------------------------------------------------#
 
 # Doxygen (run from the project root)
 alias bdox-make="make docs"
 alias bdox-clean="make clean-docs"
 
-# Apply required cpp coding style
+# Denoise of errors from external dependencies with bear and clang-tidy
 alias bct-make="make clean && bear --config src/.bear-tidy-config -- make -j $NCORES_"
 alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 
+# Format last commit with 0 lines of context, call from the git root folder,
+# uses clang-format with the config defined in src/.clang-format
+alias bformat="git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -p1 -i -v"
+
 #-----------------------------------------------------------------------------#
-#                              TROUBLESHOOTING                                #
+#                               TROUBLESHOOTING                               #
 #-----------------------------------------------------------------------------#
 
 # Clean up everything in the build and test chains in case of trouble
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #-----------------------------------------------------------------------------#
-#                              REVIEW PROCEDURES                              #
+#                               REVIEW CHECKLIST                              #
 #-----------------------------------------------------------------------------#
 
-# Go to the bitcoin core project root directory
+# 1. Go to the bitcoin core project root directory and pull all changes
+alias bday="b; bg-reset; bg-update; c; git status"
 
-# Build and run unit and functional tests (most common option)
-alias bb="bconfigure && bclean && bmake && bcheck && btest"
+# 2. Checkout the pr to review with `git checkout pr/<number>`
 
-# Build and run unit and exetended functional tests (takes a little longer...)
-alias bbe="bconfigure && bclean && bmake && bcheck && btest-ext"
+# 3a. Build and run unit and functional tests (most common option)
+alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
 
-# Reset the bitcoin repo before going to sleep
-alias bbye="breset;bupdate"
+    # 3.1. Run the extended tests with `btest-ext` if basic tests succeed
+
+# 3b. Build and run unit and exetended functional tests (takes a little longer...)
+alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"

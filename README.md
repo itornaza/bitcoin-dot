@@ -32,6 +32,8 @@ and Jon Atack's blog:
 
 [How to Review Pull Requests in Bitcoin Core](https://jonatack.github.io/articles/how-to-review-pull-requests-in-bitcoin-core)
 
+[Onboarding to Bitcoin Core](https://bitcoincore.academy/bin/onboarding-to-bitcoin-core.html)
+
 ## Lisence
 
 `Bitcoin dot file` is released under the terms of the MIT license. See [LISENCE](LISENCE.md) for more

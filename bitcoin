@@ -123,23 +123,24 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 # - All commands prefixed with: bg
 
 # Get all new changes from origin and update the local repository
-alias bgupdate="git checkout master; git fetch origin; git merge;"
+alias bg-update="git checkout master; git fetch origin; git merge;"
 
 # Reset any changes and remove new files since the last commit
-alias bgreset="git reset --hard HEAD; git clean -fd;"
+alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
 # Name of the current branch
-alias bgname="git branch --show-current"
+alias bg-name="git branch --show-current"
 
 # Commit hashes of the first and last commits
-alias bglast="git rev-parse HEAD"
-alias bgfirst="git log --reverse | head -n 1"
+alias bg-last="git rev-parse HEAD"
+alias bg-first="git log --reverse | head -n 1"
 
 # Search for pattern in a repository
 alias bgg="git grep -n " # <pattern> <option: branch name if on master>
 
 # Differences to a given number of commits back, default is 1
 bgd-files() { 
+    # $1: Number of commits backwards
     if [ $# -eq 0 ]; then
         git diff --name-only HEAD HEAD~1
     else
@@ -156,26 +157,26 @@ alias bgd-tool="git difftool origin/master " # <file>
 # git difftool <commit1> <commit2> -- <file>
 
 # List all tracked files in the repository
-alias bgls="git ls-files"
+alias bg-ls="git ls-files"
 
 # Get the commit which changed last a line in a file
-bgblame() {
+bg-blame() {
     # $1: line number
     # $2: file path
     git blame -L$1,$1 $2
 }
 
 # Get all the commits that changed the file provided as argument
-alias bglogp="git log -p " # <path>
+alias bg-log-p="git log -p " # <path>
 
 # Search commits the item (ex. a function name) is modified
-alias bglogs="git log -S " # <item>
+alias bg-log-s="git log -S " # <item>
 
 # Search commits the item (ex. a function name) is moved
-alias bglogg="git log -G " # <item>
+alias bg-log-g="git log -G " # <item>
 
 # Trace a span of lines in a file 
-bglogl() {
+bg-log-l() {
     # $1: start line
     # $2: end line
     # $3: file path
@@ -183,13 +184,13 @@ bglogl() {
 }
 
 # Follow the history of a file even if it was renamed at some point
-alias bglogfollow="git log --follow " # <path>
+alias bg-log-follow="git log --follow " # <path>
 
 # See the history of a removed file
-alias bglogremoved="git log -- "
+alias bg-log-removed="git log -- "
 
 # Get the PR discussion from a commit hash
-bglogpr() {
+bg-logpr() {
     # $1: commit hash
     git log --merges --reverse --oneline --ancestry-path $1..origin/master | head -n 1
 }
@@ -213,7 +214,7 @@ alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --enable-f
 alias bdistclean="make distclean" # Includes make clean as well
 alias bclean="make clean"
 alias bmake="make -j $NCORES_"
-alias bcheck="make -j $NCORES_ check"
+alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
 #-----------------------------------------------------------------------------#
@@ -238,19 +239,25 @@ alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
 #----------------------------===<<< Unit tests >>>===-------------------------#
 
+# bmake (i.e. make check) above runs both the unit and util tests
+
 # Run the unit test without re-compiling
 btest-unit() {
-    b # Bitcoin dir alias
+    b # Bitcoin path alias
     cd src/test/
     test_bitcoin
     b
 }
 
-#----------------------------===<<< Lint tests >>>===-------------------------#
+# Run util tests without recompiling
+# TODO: Does not find config.ini file
+alias btest-util="$BPATH_/test/util/test_runner.py"
+
+#----------------------------===<<< Lint checks >>>===------------------------#
 
 # Run locally all the lint checks that the CI does on Github
 btest-lint() {
-    b # Bitcoin dir alias
+    b # Bitcoin path alias
     cd test/lint/test_runner && cargo fmt && cargo clippy && cargo run
     b
 }
@@ -318,7 +325,7 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #-----------------------------------------------------------------------------#
 
 # 1. Go to the bitcoin core project root directory and pull all changes
-alias bday="b; bgreset; bgupdate; c; echo '\nBitcoin ready for review!\n';"
+alias bday="b; bg-reset; bg-update; c; git status"
 
 # 2. Checkout the pr to review with `git checkout pr/<number>`
 

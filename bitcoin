@@ -43,9 +43,10 @@ export RAMDISK_SIZE_=8388608
 export RAMDISK_SIZE_EXT_=25165824
 
 # Bitcoin paths
-export BPATH_="~/Documents/projects/bitcoin/bitcoin"
+export BITDEV_="~/Documents/projects/bitdev"
+export BPATH_="$BITDEV_/bitcoin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
-export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
+export BDOT_="$BITDEV_/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
 export BFUNC_="$BTEST_/functional"
 export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
@@ -92,6 +93,7 @@ alias bg-ed="git config --global -e"
 #-----------------------------------------------------------------------------#
 
 # Bitcoin paths
+alias bitdev="cd $BITDEV_;pwd"
 alias b="cd $BPATH_;pwd"
 alias bdata="cd $BDATA_;pwd"
 alias bdot="cd $BDOT_;pwd"
@@ -103,9 +105,6 @@ alias blog-main="$ED_ $BDATA_/debug.log"
 alias blog-test="$ED_ $BDATA_/testnet3/debug.log"
 alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
-
-# View doxygen generated documentation on firefox
-alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
 #                           BITCOIND AND BITCOIN-CLI                          #
@@ -208,22 +207,28 @@ bg-logp-r() {
 
 #-----------------------------===<<< Git rebase >>>===------------------------#
 
-# Display all commits of the branch since the fork from master
+# Display all the commits including the master's if on a branch
 alias bg-oneline="git log --oneline "
+
+# Display all commits of the branch since the fork from master
 alias bg-commits="bg-oneline $BGMASTER_.."
 
 # Display the number of commits of the branch since the fork from master
 alias bg-commits-n="bg-commits | wc -l"
 
 # Open interactive rebase to edit a given last number of commits
-alias bg-rebase-i="git rebase -i HEAD~" # <number>
+# Switch `pick` to `reword` or `squash` during the session
+bg-rebase-i() {
+    # $1: Number of last commits
+    git rebase -i HEAD~$1
+}
 
 # Continue editing the next commit within the interactive rebase process
 alias bg-continue="git rebase --continue"
 
 # Force push changes from rebase 
 # Caution! is irreversible
-alias bg-push-f="git push -f" 
+alias bg-force="git push -f" 
 
 #-----------------------------------------------------------------------------#
 #                                    BUILD                                    #
@@ -342,6 +347,9 @@ alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 # Format last commit with 0 lines of context, call from the git root folder,
 # uses clang-format with the config defined in src/.clang-format
 alias bformat="git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -p1 -i -v"
+
+# View doxygen generated documentation on firefox
+alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
 #                               TROUBLESHOOTING                               #

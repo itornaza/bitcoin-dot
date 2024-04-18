@@ -18,15 +18,6 @@
 # clang-tidy is now also dscoverable by bear
 export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
-# Bitcoin paths
-export BPATH_="~/Documents/projects/bitcoin/bitcoin"
-export BDATA_="~/Library/Application\ Support/Bitcoin"
-export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
-export BTEST_="$BPATH_/test"
-export BFUNC_="$BTEST_/functional"
-export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
-export BDOX_="$BPATH_/doc/doxygen/html"
-
 # System tools
 export ED_=code # or vim
 export BC_=/opt/homebrew/opt/llvm/bin/clang
@@ -50,6 +41,18 @@ export RAMDISK_SIZE_=8388608
 # Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
 # ** Caution! ** Check how much RAM your system supports first 
 export RAMDISK_SIZE_EXT_=25165824
+
+# Bitcoin paths
+export BPATH_="~/Documents/projects/bitcoin/bitcoin"
+export BDATA_="~/Library/Application\ Support/Bitcoin"
+export BDOT_="~/Documents/projects/bitcoin/btc-dot" # Location of THIS file
+export BTEST_="$BPATH_/test"
+export BFUNC_="$BTEST_/functional"
+export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
+export BDOX_="$BPATH_/doc/doxygen/html"
+
+# Git 
+export BGMASTER_="master"
 
 #-----------------------------------------------------------------------------#
 #                                    SETUP                                    #
@@ -80,6 +83,8 @@ bg-ed-setup() {
     git config --global merge.tool vscode
     git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 }
+
+# Open git global editor for manual editing
 alias bg-ed="git config --global -e"
 
 #-----------------------------------------------------------------------------#
@@ -119,21 +124,19 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 
 #-----------------------------------------------------------------------------#
 #                                     GIT                                     #
+#                           (bg and BG - prefixes)                            #
 #-----------------------------------------------------------------------------#
-# - All commands prefixed with: bg
-
-# Get all new changes from origin and update the local repository
-alias bg-update="git checkout master; git fetch origin; git merge;"
-
-# Reset any changes and remove new files since the last commit
-alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
 # Name of the current branch
 alias bg-name="git branch --show-current"
 
-# Commit hashes of the first and last commits
-alias bg-last="git rev-parse HEAD"
-alias bg-first="git log --reverse | head -n 1"
+# Get all new changes from origin and update the local repository
+alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
+
+# Reset any changes and remove new files since the last commit
+alias bg-reset="git reset --hard HEAD; git clean -fd;"
+
+#------------------------===<<< Git quick searches >>>===---------------------#
 
 # Search for pattern in a repository
 alias bgg="git grep -n " # <pattern> <option: branch name if on master>
@@ -149,12 +152,20 @@ bgd-files() {
 }
 
 # Files that have differences between this branch and master
-alias bgd-files-master="git diff --name-only origin/master HEAD"
+alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"
 
 # Show diffs of a file on current branch file compared to master 
 # git difftool <commit-to-compare-with> <file>
-alias bgd-tool="git difftool origin/master " # <file>
+alias bgd-tool="git difftool origin/$BGMASTER_ " # <file>
 # git difftool <commit1> <commit2> -- <file>
+
+#--------------------------===<<< Git archaeology >>>===----------------------#
+
+# Commit hash of the current commit
+alias bg-last="git rev-parse HEAD"
+
+# Commit hash of the initial commit
+alias bg-first="git log --reverse | head -n 1"
 
 # List all tracked files in the repository
 alias bg-ls="git ls-files"
@@ -190,10 +201,25 @@ alias bg-log-follow="git log --follow " # <path>
 alias bg-log-removed="git log -- "
 
 # Get the PR discussion from a commit hash
-bg-logpr() {
+bg-logp-r() {
     # $1: commit hash
-    git log --merges --reverse --oneline --ancestry-path $1..origin/master | head -n 1
+    git log --merges --reverse --oneline --ancestry-path $1..origin/$BGMASTER_ | head -n 1
 }
+
+#-----------------------------===<<< Git rebase >>>===------------------------#
+
+# Display all commits of the branch since the fork from master
+alias bg-commits="git log --oneline $BGMASTER_.."
+
+# Display the number of commits of the branch since the fork from master
+alias bg-commits-n="bg-commits | wc -l"
+
+# Open interactive rebase to edit a given last number of commits
+alias bg-rebase-i="git rebase -i HEAD~" # <number>
+
+# Force push changes from rebase 
+# Caution! is irreversible
+alias bg-push-f="git push -f" 
 
 #-----------------------------------------------------------------------------#
 #                                    BUILD                                    #

@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 ###############################################################################
 #                            Bitcoin Core dot file                            #
 #                     (`b` and `B` - prefixes for bitcoin)                    #

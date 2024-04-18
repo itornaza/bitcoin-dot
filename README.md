@@ -36,5 +36,4 @@ and Jon Atack's blog:
 
 ## Lisence
 
-`Bitcoin dot file` is released under the terms of the MIT license. See [LISENCE](LISENCE) for more
-information or see https://opensource.org/licenses/MIT.
+`Bitcoin dot file` is released under the terms of the [MIT license](https://opensource.org/licenses/MIT)

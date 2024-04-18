@@ -209,13 +209,17 @@ bg-logp-r() {
 #-----------------------------===<<< Git rebase >>>===------------------------#
 
 # Display all commits of the branch since the fork from master
-alias bg-commits="git log --oneline $BGMASTER_.."
+alias bg-oneline="git log --oneline "
+alias bg-commits="bg-oneline $BGMASTER_.."
 
 # Display the number of commits of the branch since the fork from master
 alias bg-commits-n="bg-commits | wc -l"
 
 # Open interactive rebase to edit a given last number of commits
 alias bg-rebase-i="git rebase -i HEAD~" # <number>
+
+# Continue editing the next commit within the interactive rebase process
+alias bg-continue="git rebase --continue"
 
 # Force push changes from rebase 
 # Caution! is irreversible

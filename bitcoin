@@ -229,7 +229,7 @@ bg-rebase-i() {
 alias bg-continue="git rebase --continue"
 
 # Force push changes from rebase 
-# Caution! is irreversible
+# ** Caution! ** is irreversible
 alias bg-force="git push -f" 
 
 #-----------------------------------------------------------------------------#

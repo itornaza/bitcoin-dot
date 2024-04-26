@@ -61,6 +61,9 @@ export BGMASTER_="master"
 #                                    SETUP                                    #
 #-----------------------------------------------------------------------------#
 
+# Python
+alias pip="python3 -m pip"
+
 # Install brew dependencies
 alias btools="brew install ccache llvm berkeley-db@4 automake boost \
               libevent libnatpmp libtool miniupmpc pkg-config python \
@@ -77,7 +80,7 @@ btools-update() {
 }
 
 # Make sure you are using the latest python 3 release first with `which python`
-alias bpips="python -m pip install pyzmq"
+alias bpips="/usr/bin/python3 -m pip install pyzmq"
 
 # Git difftool and mergetool default editor set up to vs code (default is vim)
 bg-ed-setup() {
@@ -254,6 +257,9 @@ alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
+# Minimal build
+alias bbuild="bconfigure && bmake"
+
 #-----------------------------------------------------------------------------#
 #                                    TESTS                                    #
 #-----------------------------------------------------------------------------#
@@ -270,6 +276,9 @@ alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/deb
 alias bdata-clear-test="rm -fr $BDATA_/testnet3/anchors.dat $BDATA_/testnet3/peers.dat $BDATA_/testnet3/debug.log"
 alias bdata-clear-signet="rm -fr $BDATA_/signet/anchors.dat $BDATA_/signet/peers.dat $BDATA_/signet/debug.log"
 alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/peers.dat $BDATA_/regtest/debug.log"
+
+# Wipe out regtest for a clean run
+alias bdata-erase-regtest="rm -fr $BDATA_/regtest/*"
 
 # Clean up test environment
 alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
@@ -354,6 +363,20 @@ alias bformat="git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -
 alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
+#                                     MISC                                    #
+#-----------------------------------------------------------------------------#
+
+# Taproot learning project at:
+# https://github.com/bitcoinops/taproot-workshop?tab=readme-ov-file
+jn-taproot() {
+    bitdev
+    cd taproot-workshop
+    python3.12 -m venv .venv && source .venv/bin/activate
+    jupyter notebook
+    # After completing the work do not forget to call `deactivate`
+}
+
+#-----------------------------------------------------------------------------#
 #                               TROUBLESHOOTING                               #
 #-----------------------------------------------------------------------------#
 
@@ -369,10 +392,17 @@ alias bday="b; bg-reset; bg-update; c; git status"
 
 # 2. Checkout the pr to review with `git checkout pr/<number>`
 
-# 3a. Build and run unit and functional tests (most common option)
+# Some commands that are defined above and are needed at this stage:
+# 1. bdistclean
+# 2. bconfigure
+# 3. bmake
+# 4. bbuild (bconfigure && bmake)
+# 4. bcheck
+# 5. btest
+# 6. btest-ext
+
+# 3a. Build and run unit and functional tests
 alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
 
-    # 3.1. Run the extended tests with `btest-ext` if basic tests succeed
-
-# 3b. Build and run unit and exetended functional tests (takes a little longer...)
+# 3b. Build and run unit and extended functional tests
 alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"

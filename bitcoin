@@ -140,7 +140,7 @@ alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
 # Reset any changes and remove new files since the last commit
 alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
-#------------------------===<<< Git quick searches >>>===---------------------#
+#----------------------===<<< Git searches and diffs >>>===-------------------#
 
 # Search for pattern in a repository
 alias bgg="git grep -n " # <pattern> <option: branch name if on master>
@@ -161,7 +161,15 @@ alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"
 # Show diffs of a file on current branch file compared to master 
 # git difftool <commit-to-compare-with> <file>
 alias bgd-tool="git difftool origin/$BGMASTER_ " # <file>
-# git difftool <commit1> <commit2> -- <file>
+# git difftool <combmit1> <commit2> -- <file>
+
+# Differences between ranges of commits to use after rebasing
+bgd-range() {
+    # $1: commit-1
+    # $2: commit-2
+    # $3: range 
+    git range-diff $1~$3..$1 $2~$3..$2
+}
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
 
@@ -391,6 +399,10 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 alias bday="b; bg-reset; bg-update; c; git status"
 
 # 2. Checkout the pr to review with `git checkout pr/<number>`
+bgpr() {
+    # $1: PR number
+    git checkout pr/$1
+}
 
 # Some commands that are defined above and are needed at this stage:
 # 1. bdistclean
@@ -401,8 +413,8 @@ alias bday="b; bg-reset; bg-update; c; git status"
 # 5. btest
 # 6. btest-ext
 
-# 3a. Build and run unit and functional tests
+# 3a. Build and run unit and functional tests from clean
 alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
 
-# 3b. Build and run unit and extended functional tests
+# 3b. Build and run unit and extended functional tests from clean
 alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"

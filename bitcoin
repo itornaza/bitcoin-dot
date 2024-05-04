@@ -140,6 +140,12 @@ alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
 # Reset any changes and remove new files since the last commit
 alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
+# Checkout a pr
+bg-pr() {
+    # $1: PR number
+    git checkout pr/$1
+}
+
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
 # Search for pattern in a repository
@@ -399,10 +405,10 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 alias bday="b; bg-reset; bg-update; c; git status"
 
 # 2. Checkout the pr to review with `git checkout pr/<number>`
-bgpr() {
-    # $1: PR number
-    git checkout pr/$1
-}
+# bg-pr <pr number> 
+
+# 3. Checkout the commit to test
+# git checkout <commit>
 
 # Some commands that are defined above and are needed at this stage:
 # 1. bdistclean
@@ -413,8 +419,8 @@ bgpr() {
 # 5. btest
 # 6. btest-ext
 
-# 3a. Build and run unit and functional tests from clean
+# 4a. Build and run unit and functional tests from clean
 alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
 
-# 3b. Build and run unit and extended functional tests from clean
+# 4b. Build and run unit and extended functional tests from clean
 alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"

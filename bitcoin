@@ -401,6 +401,8 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #                               REVIEW CHECKLIST                              #
 #-----------------------------------------------------------------------------#
 
+#------------------------------===<<< Set up >>>===---------------------------#
+
 # 1. Go to the bitcoin core project root directory and pull all changes
 alias bday="b; bg-reset; bg-update; c; git status"
 
@@ -410,7 +412,15 @@ alias bday="b; bg-reset; bg-update; c; git status"
 # 3. Checkout the commit to test
 # git checkout <commit>
 
-# Some commands that are defined above and are needed at this stage:
+#--------------------------===<<< Build and test >>>===-----------------------#
+
+# 4a. Build and run unit and functional tests from clean
+alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
+
+# 4b. Build and run unit and extended functional tests from clean
+alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"
+
+# Some commands that are defined above and are needed at build and test stage:
 # 1. bdistclean
 # 2. bconfigure
 # 3. bmake
@@ -419,8 +429,10 @@ alias bday="b; bg-reset; bg-update; c; git status"
 # 5. btest
 # 6. btest-ext
 
-# 4a. Build and run unit and functional tests from clean
-alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
+#---------------------------===<<< Re reviewing >>>===------------------------#
 
-# 4b. Build and run unit and extended functional tests from clean
-alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"
+# 1. Get the changed files with
+# git diff --name-only <last-reviewed-commit> <last-commit>
+
+# 2. Examine the changes in each file
+# git difftool <last-reviewed-commit> <last-commit> -- <file>

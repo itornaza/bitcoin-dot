@@ -45,8 +45,9 @@ export RAMDISK_SIZE_=8388608
 export RAMDISK_SIZE_EXT_=25165824
 
 # Bitcoin paths
+export BITCOIN_PROJECT_NAME="ion-bitcoin" # `bitcoin` or ion-bitcoin for the fork
 export BITDEV_="~/Documents/projects/bitdev"
-export BPATH_="$BITDEV_/bitcoin"
+export BPATH_="$BITDEV_/$BITCOIN_PROJECT_NAME"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDOT_="$BITDEV_/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
@@ -145,6 +146,13 @@ bg-pr() {
     # $1: PR number
     git checkout pr/$1
 }
+
+#--------------------------===<<< Git fork handling >>>===--------------------#
+# TODO: Put in a script
+# git fetch upstream
+# git checkout master
+# git merge upstream/master
+# git push origin master
 
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 

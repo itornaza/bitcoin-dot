@@ -44,8 +44,12 @@ export RAMDISK_SIZE_=8388608
 # ** Caution! ** Check how much RAM your system supports first 
 export RAMDISK_SIZE_EXT_=25165824
 
+# Chose the Bitcoin repository to work with
+export FORK="ion-bitcoin"
+export CORE="bitcoin"
+export BITCOIN_PROJECT_NAME=$FORK # one of the above two options
+
 # Bitcoin paths
-export BITCOIN_PROJECT_NAME="ion-bitcoin" # `bitcoin` or ion-bitcoin for the fork
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/$BITCOIN_PROJECT_NAME"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
@@ -147,12 +151,28 @@ bg-pr() {
     git checkout pr/$1
 }
 
+#----------------------===<<< Git original repo handling >>>===---------------#
+bg-update() {
+    bitdev
+    cd $CORE 
+    bg-reset 
+    bg-update 
+    c 
+    git status
+}
+
 #--------------------------===<<< Git fork handling >>>===--------------------#
-# TODO: Put in a script
-# git fetch upstream
-# git checkout master
-# git merge upstream/master
-# git push origin master
+
+# Update the fork localy and on github from the original repository
+bg-upstream() {
+    bitdev
+    cd $FORK
+    pwd
+    git fetch upstream
+    git checkout master
+    git merge upstream/master
+    git push origin master
+}
 
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
@@ -411,8 +431,14 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #------------------------------===<<< Set up >>>===---------------------------#
 
-# 1. Go to the bitcoin core project root directory and pull all changes
-alias bday="b; bg-reset; bg-update; c; git status"
+# 1a. Go to the bitcoin core project root directory and pull all changes, or
+
+# TODO: check script and remove the next line
+# alias bday="b; bg-reset; bg-update; c; git status"
+alias bday="bg-update"
+
+# 1b. Go to the fork and update master from upstream
+alias fday="bg-upstream"
 
 # 2. Checkout the pr to review with `git checkout pr/<number>`
 # bg-pr <pr number> 

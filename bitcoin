@@ -12,6 +12,16 @@
 ###############################################################################
 
 #-----------------------------------------------------------------------------#
+#                                  USER INPUT                                 #
+#               Define the following before executing this script             #
+#-----------------------------------------------------------------------------#
+
+# Caution! Choose the Bitcoin repository to work with
+export FORK="bitcoin-fork"
+export CLONE="bitcoin-clone"
+export BITCOIN_PROJECT_NAME=$FORK # FORK or CLONE
+
+#-----------------------------------------------------------------------------#
 #                                   VARIABLES                                 #
 #                  (`_` - suffix for all variables in this file)              #
 #-----------------------------------------------------------------------------#
@@ -44,11 +54,6 @@ export RAMDISK_SIZE_=8388608
 # ** Caution! ** Check how much RAM your system supports first 
 export RAMDISK_SIZE_EXT_=25165824
 
-# Chose the Bitcoin repository to work with
-export FORK="ion-bitcoin"
-export CORE="bitcoin"
-export BITCOIN_PROJECT_NAME=$FORK # one of the above two options
-
 # Bitcoin paths
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/$BITCOIN_PROJECT_NAME"
@@ -59,11 +64,11 @@ export BFUNC_="$BTEST_/functional"
 export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
 export BDOX_="$BPATH_/doc/doxygen/html"
 
-# Git 
+# Master branch name (could be `main` for more modern repositories)
 export BGMASTER_="master"
 
 #-----------------------------------------------------------------------------#
-#                                    SETUP                                    #
+#                                INSTALLATIONS                                #
 #-----------------------------------------------------------------------------#
 
 # Python
@@ -84,22 +89,11 @@ btools-update() {
     brew cleanup;
 }
 
-# Make sure you are using the latest python 3 release first with `which python`
+# Make sure you are using the latest python 3 release first with `which python` 
 alias bpips="/usr/bin/python3 -m pip install pyzmq"
 
-# Git difftool and mergetool default editor set up to vs code (default is vim)
-bg-ed-setup() {
-    git config --global diff.tool vscode
-    git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
-    git config --global merge.tool vscode
-    git config --global mergetool.vscode.cmd 'code --wait $MERGED'
-}
-
-# Open git global editor for manual editing
-alias bg-ed="git config --global -e"
-
 #-----------------------------------------------------------------------------#
-#                                PATHS AND FILES                              #
+#                                 PATH SHORTCUTS                              #
 #-----------------------------------------------------------------------------#
 
 # Bitcoin paths
@@ -136,6 +130,21 @@ alias bclin="$BPATH_/src/bitcoin-cli -named"
 #                           (bg and BG - prefixes)                            #
 #-----------------------------------------------------------------------------#
 
+#---------------------------===<<< Git configuration >>>===-------------------#
+
+# Git difftool and mergetool default editor set up to vs code (default is vim)
+bg-ed-setup() {
+    git config --global diff.tool vscode
+    git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
+    git config --global merge.tool vscode
+    git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+}
+
+# Open git global editor for manual editing
+alias bg-ed="git config --global -e"
+
+#-----------------------------===<<< Git basic >>>===-------------------------#
+
 # Name of the current branch
 alias bg-name="git branch --show-current"
 
@@ -151,20 +160,19 @@ bg-pr() {
     git checkout pr/$1
 }
 
-#----------------------===<<< Git original repo handling >>>===---------------#
-bg-update() {
+#-----------------------===<<< Git clone repo handling >>>===-----------------#
+bg-clone-update() {
     bitdev
-    cd $CORE 
+    cd $CLONE 
     bg-reset 
     bg-update 
-    c 
     git status
 }
 
 #--------------------------===<<< Git fork handling >>>===--------------------#
 
 # Update the fork localy and on github from the original repository
-bg-upstream() {
+bg-fork-update() {
     bitdev
     cd $FORK
     pwd
@@ -172,6 +180,13 @@ bg-upstream() {
     git checkout master
     git merge upstream/master
     git push origin master
+}
+
+# Update the current branch with all changes from master
+bg-fork-branch-update() {
+    # $1: Branch name
+    git checkout $1
+    git rebase
 }
 
 #----------------------===<<< Git searches and diffs >>>===-------------------#
@@ -195,6 +210,8 @@ alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"
 # Show diffs of a file on current branch file compared to master 
 # git difftool <commit-to-compare-with> <file>
 alias bgd-tool="git difftool origin/$BGMASTER_ " # <file>
+
+# Generic case
 # git difftool <combmit1> <commit2> -- <file>
 
 # Differences between ranges of commits to use after rebasing
@@ -426,33 +443,43 @@ jn-taproot() {
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #-----------------------------------------------------------------------------#
-#                               REVIEW CHECKLIST                              #
+#                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
 
-#------------------------------===<<< Set up >>>===---------------------------#
+#----------------------------===<<< PR review >>>===--------------------------#
 
-# 1a. Go to the bitcoin core project root directory and pull all changes, or
+# Go to the clone and update master from origin
+alias cday="bg-clone-update"
 
-# TODO: check script and remove the next line
-# alias bday="b; bg-reset; bg-update; c; git status"
-alias bday="bg-update"
-
-# 1b. Go to the fork and update master from upstream
-alias fday="bg-upstream"
-
-# 2. Checkout the pr to review with `git checkout pr/<number>`
+# Checkout the pr to review with `git checkout pr/<number>`
 # bg-pr <pr number> 
 
-# 3. Checkout the commit to test
+# Checkout the commit to test
 # git checkout <commit>
+
+#---------------------------===<<< PR Re-review >>>===------------------------#
+
+# Get the changed files with
+# git diff --name-only <last-reviewed-commit> <last-commit>
+
+# Examine the changes in each file
+# git difftool <last-reviewed-commit> <last-commit> -- <file>
+
+#----------------------===<<< Work on a fork branch >>>===--------------------#
+
+# Go to the fork and update master from upstream
+alias fday="bg-fork-update"
+# Optionally followed by rebasing with bg-fork-branch-update
 
 #--------------------------===<<< Build and test >>>===-----------------------#
 
-# 4a. Build and run unit and functional tests from clean
+# Build and run unit and functional tests from clean
 alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
 
-# 4b. Build and run unit and extended functional tests from clean
+# Build and run unit and extended functional tests from clean
 alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"
+
+#------------------===<<< Build and test quick reference >>>===---------------#
 
 # Some commands that are defined above and are needed at build and test stage:
 # 1. bdistclean
@@ -462,11 +489,3 @@ alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"
 # 4. bcheck
 # 5. btest
 # 6. btest-ext
-
-#---------------------------===<<< Re reviewing >>>===------------------------#
-
-# 1. Get the changed files with
-# git diff --name-only <last-reviewed-commit> <last-commit>
-
-# 2. Examine the changes in each file
-# git difftool <last-reviewed-commit> <last-commit> -- <file>

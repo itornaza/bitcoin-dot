@@ -17,7 +17,7 @@
 #-----------------------------------------------------------------------------#
 
 # Caution! Choose the Bitcoin repository to work with
-export FORK="bitcoin-fork"
+export FORK="bitcoin"
 export CLONE="bitcoin-clone"
 export BITCOIN_PROJECT_NAME=$FORK # FORK or CLONE
 
@@ -98,7 +98,7 @@ alias bpips="/usr/bin/python3 -m pip install pyzmq"
 
 # Bitcoin paths
 alias bitdev="cd $BITDEV_;pwd"
-alias b="cd $BPATH_;pwd"
+alias b="cd $BPATH_;pwd" # Takes you either to the clone or fork
 alias bdata="cd $BDATA_;pwd"
 alias bdot="cd $BDOT_;pwd"
 alias btestlogs="cd $BTEST_LOGS_;pwd"
@@ -192,7 +192,7 @@ bg-fork-branch-update() {
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
 # Search for pattern in a repository
-alias bgg="git grep -n " # <pattern> <option: branch name if on master>
+alias bgg="git grep -n " # <pattern> <optional: branch name> -- <path>
 
 # Differences to a given number of commits back, default is 1
 bgd-files() { 

@@ -2,7 +2,7 @@
 
 ## Summary
 
-This is a [simple file](https://github.com/itornaza/btc-dot/blob/main/bitcoin) that defines aliases and exports in order to simplify and streamline the Bitcoin Core testing and development process.
+This is a [simple file](https://github.com/itornaza/btc-dot/blob/main/bitcoin) that defines aliases and exports in order to simplify and streamline the Bitcoin Core testing and development process. It assumes you are working from a fork.
 
 ## Systems
 

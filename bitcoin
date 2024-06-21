@@ -1,25 +1,25 @@
 #!/usr/bin/env zsh
 
 ###############################################################################
-#                            Bitcoin Core dot file                            #
+#                                                                             #
+#                            BITCOIN CODE DOT FILE                            #
+#                                                                             #
 #                     (`b` and `B` - prefixes for bitcoin)                    #
+#                                                                             #
 ###############################################################################
+#                                                                             #
 # 1. Intended for macos but can be easily modified for other UNIX and Linux   #
+#                                                                             #
 # 2. To include it in your shell write the following line in ~/.zshrc         #
-#    `source <path_to_this_file>`                                             #
+#    `source <path-to-this-file>`                                             #
+#                                                                             #
 # 3. For more procedural options go to the bottom of the file                 #
-# 4. Read all `Caution!` contained in the file before use                     #
+#                                                                             #
+# 4. All git operations assume you are working from a fork of bitcoin         #
+#                                                                             #
+# 5. Read all `Caution!` contained in the file before use                     #
+#                                                                             #
 ###############################################################################
-
-#-----------------------------------------------------------------------------#
-#                                  USER INPUT                                 #
-#               Define the following before executing this script             #
-#-----------------------------------------------------------------------------#
-
-# Caution! Choose the Bitcoin repository to work with
-export FORK="bitcoin"
-export CLONE="bitcoin-clone"
-export BITCOIN_PROJECT_NAME=$FORK # FORK or CLONE
 
 #-----------------------------------------------------------------------------#
 #                                   VARIABLES                                 #
@@ -56,7 +56,7 @@ export RAMDISK_SIZE_EXT_=25165824
 
 # Bitcoin paths
 export BITDEV_="~/Documents/projects/bitdev"
-export BPATH_="$BITDEV_/$BITCOIN_PROJECT_NAME"
+export BPATH_="$BITDEV_/bitcoin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDOT_="$BITDEV_/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
@@ -98,7 +98,7 @@ alias bpips="/usr/bin/python3 -m pip install pyzmq"
 
 # Bitcoin paths
 alias bitdev="cd $BITDEV_;pwd"
-alias b="cd $BPATH_;pwd" # Takes you either to the clone or fork
+alias b="cd $BPATH_;pwd"
 alias bdata="cd $BDATA_;pwd"
 alias bdot="cd $BDOT_;pwd"
 alias btestlogs="cd $BTEST_LOGS_;pwd"
@@ -148,11 +148,15 @@ alias bg-ed="git config --global -e"
 # Name of the current branch
 alias bg-name="git branch --show-current"
 
-# Get all new changes from origin and update the local repository
-alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
-
 # Reset any changes and remove new files since the last commit
 alias bg-reset="git reset --hard HEAD; git clean -fd;"
+
+#-----------------------------===<<< Git PR >>>===----------------------------#
+
+bg-getpr() {
+    # $1: PR number
+    git fetch upstream pull/$1/head:pr-$1
+}
 
 # Checkout a pr
 bg-pr() {
@@ -160,21 +164,11 @@ bg-pr() {
     git checkout pr/$1
 }
 
-#-----------------------===<<< Git clone repo handling >>>===-----------------#
-bg-clone-update() {
-    bitdev
-    cd $CLONE 
-    bg-reset 
-    bg-update 
-    git status
-}
-
 #--------------------------===<<< Git fork handling >>>===--------------------#
 
 # Update the fork localy and on github from the original repository
-bg-fork-update() {
-    bitdev
-    cd $FORK
+bg-update() {
+    b
     pwd
     git fetch upstream
     git checkout master
@@ -183,7 +177,7 @@ bg-fork-update() {
 }
 
 # Update the current branch with all changes from master
-bg-fork-branch-update() {
+bg-branch-update() {
     # $1: Branch name
     git checkout $1
     git rebase
@@ -192,7 +186,7 @@ bg-fork-branch-update() {
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
 # Search for pattern in a repository
-alias bgg="git grep -n " # <pattern> <optional: branch name> -- <path>
+alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
 
 # Differences to a given number of commits back, default is 1
 bgd-files() { 
@@ -348,7 +342,7 @@ alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
 # Run the unit test without re-compiling
 btest-unit() {
-    b # Bitcoin path alias
+    b
     cd src/test/
     test_bitcoin
     b
@@ -362,7 +356,7 @@ alias btest-util="$BPATH_/test/util/test_runner.py"
 
 # Run locally all the lint checks that the CI does on Github
 btest-lint() {
-    b # Bitcoin path alias
+    b
     cd test/lint/test_runner && cargo fmt && cargo clippy && cargo run
     b
 }
@@ -422,20 +416,6 @@ alias bformat="git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -
 alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 #-----------------------------------------------------------------------------#
-#                                     MISC                                    #
-#-----------------------------------------------------------------------------#
-
-# Taproot learning project at:
-# https://github.com/bitcoinops/taproot-workshop?tab=readme-ov-file
-jn-taproot() {
-    bitdev
-    cd taproot-workshop
-    python3.12 -m venv .venv && source .venv/bin/activate
-    jupyter notebook
-    # After completing the work do not forget to call `deactivate`
-}
-
-#-----------------------------------------------------------------------------#
 #                               TROUBLESHOOTING                               #
 #-----------------------------------------------------------------------------#
 
@@ -443,21 +423,45 @@ jn-taproot() {
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #-----------------------------------------------------------------------------#
-#                                  CHECKLISTS                                 #
+#                                  DEPRECATED                                 #
 #-----------------------------------------------------------------------------#
 
-#----------------------------===<<< PR review >>>===--------------------------#
+#-----------------------===<<< Git clone repo handling >>>===-----------------#
+
+# Get all new changes from origin and update the local repository
+alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
+
+# Update the cloned repository
+bg-clone-update() {
+    b
+    bg-reset 
+    bg-update 
+    git status
+}
 
 # Go to the clone and update master from origin
 alias cday="bg-clone-update"
 
+#-----------------------------------------------------------------------------#
+#                                  CHECKLISTS                                 #
+#-----------------------------------------------------------------------------#
+
+#----------------------===<<< Work on a fork branch >>>===--------------------#
+
+# Get all updates from upstream 
+alias dday="bg-update"
+# Optionally followed by rebasing with bg-branch-update
+
+#----------------------------===<<< PR review >>>===--------------------------#
+
+# Get a PR from upstream
+# bg-getpr <pr-number>
+
 # Checkout the pr to review with `git checkout pr/<number>`
-# bg-pr <pr number> 
+# bg-pr <pr-number> 
 
 # Checkout the commit to test
 # git checkout <commit>
-
-#---------------------------===<<< PR Re-review >>>===------------------------#
 
 # Get the changed files with
 # git diff --name-only <last-reviewed-commit> <last-commit>
@@ -465,27 +469,21 @@ alias cday="bg-clone-update"
 # Examine the changes in each file
 # git difftool <last-reviewed-commit> <last-commit> -- <file>
 
-#----------------------===<<< Work on a fork branch >>>===--------------------#
-
-# Go to the fork and update master from upstream
-alias fday="bg-fork-update"
-# Optionally followed by rebasing with bg-fork-branch-update
-
 #--------------------------===<<< Build and test >>>===-----------------------#
 
 # Build and run unit and functional tests from clean
-alias bb="bdistclean && bconfigure && bmake && bcheck && btest"
+alias bb="bconfigure && bmake && bcheck && btest"
 
 # Build and run unit and extended functional tests from clean
-alias bbe="bdistclean && bconfigure && bmake && bcheck && btest-ext"
+alias bbe="bconfigure && bmake && bcheck && btest-ext"
 
-#------------------===<<< Build and test quick reference >>>===---------------#
+# References:
 
-# Some commands that are defined above and are needed at build and test stage:
-# 1. bdistclean
-# 2. bconfigure
-# 3. bmake
-# 4. bbuild (bconfigure && bmake)
-# 4. bcheck
-# 5. btest
-# 6. btest-ext
+# bdistclean
+# bclean
+# bconfigure
+# bmake
+# bbuild (bconfigure && bmake)
+# bcheck
+# btest
+# btest-ext

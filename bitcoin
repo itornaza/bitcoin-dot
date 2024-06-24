@@ -161,7 +161,7 @@ bg-getpr() {
 # Checkout a pr
 bg-pr() {
     # $1: PR number
-    git checkout pr/$1
+    git checkout pr-$1
 }
 
 #--------------------------===<<< Git fork handling >>>===--------------------#

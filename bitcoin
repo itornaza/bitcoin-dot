@@ -173,7 +173,7 @@ bg-update() {
     git checkout master
     git merge upstream/master
     git push origin master
-    echo "Have fun 😉!"
+    echo "Enjoy 😉!"
 }
 
 # Update the current branch with all changes from master

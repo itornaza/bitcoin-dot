@@ -423,26 +423,6 @@ alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 #-----------------------------------------------------------------------------#
-#                                  DEPRECATED                                 #
-#-----------------------------------------------------------------------------#
-
-#-----------------------===<<< Git clone repo handling >>>===-----------------#
-
-# Get all new changes from origin and update the local repository
-alias bg-update="git checkout $BGMASTER_; git fetch origin; git merge;"
-
-# Update the cloned repository
-bg-clone-update() {
-    b
-    bg-reset 
-    bg-update 
-    git status
-}
-
-# Go to the clone and update master from origin
-alias cday="bg-clone-update"
-
-#-----------------------------------------------------------------------------#
 #                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
 
@@ -476,8 +456,6 @@ alias bb="bconfigure && bmake && bcheck && btest"
 
 # Build and run unit and extended functional tests from clean
 alias bbe="bconfigure && bmake && bcheck && btest-ext"
-
-# References:
 
 # bdistclean
 # bclean

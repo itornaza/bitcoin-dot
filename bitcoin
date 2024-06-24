@@ -169,11 +169,11 @@ bg-pr() {
 # Update the fork localy and on github from the original repository
 bg-update() {
     b
-    pwd
     git fetch upstream
     git checkout master
     git merge upstream/master
     git push origin master
+    echo "Have fun 😉!"
 }
 
 # Update the current branch with all changes from master
@@ -426,27 +426,25 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
 
-#----------------------===<<< Work on a fork branch >>>===--------------------#
-
-# Get all updates from upstream 
-alias dday="bg-update"
-# Optionally followed by rebasing with bg-branch-update
+### Get all updates from upstream 
+# bg-update
+# bg-branch-update
 
 #----------------------------===<<< PR review >>>===--------------------------#
 
-# Get a PR from upstream
+### Get a PR from upstream
 # bg-getpr <pr-number>
 
-# Checkout the pr to review with `git checkout pr/<number>`
+### Checkout the pr to review with `git checkout pr/<number>`
 # bg-pr <pr-number> 
 
-# Checkout the commit to test
+### Checkout the commit to test
 # git checkout <commit>
 
-# Get the changed files with
+### Get the changed files with
 # git diff --name-only <last-reviewed-commit> <last-commit>
 
-# Examine the changes in each file
+### Examine the changes in each file
 # git difftool <last-reviewed-commit> <last-commit> -- <file>
 
 #--------------------------===<<< Build and test >>>===-----------------------#

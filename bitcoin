@@ -189,6 +189,7 @@ bg-branch-update() {
 alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
 
 # Differences to a given number of commits back, default is 1
+# Run a git log to see how many commits back is the upstream/master, etc
 bgd-files() { 
     # $1: Number of commits backwards
     if [ $# -eq 0 ]; then

@@ -380,6 +380,10 @@ alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bd
 # Coverage for the exteded functional tests to uncover missing rpcs from harness
 alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended --coverage && bdestroy-ram"
 
+#----------------------------===<<< Fuzz tests >>>===-------------------------#
+
+# TODO
+
 #---------------------------===<<< Test reports >>>===------------------------#
 
 # Unit test coverage report
@@ -427,25 +431,25 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
 
-### Get all updates from upstream 
+# (1) Get all updates from upstream 
 # bg-update
 # bg-branch-update
 
 #----------------------------===<<< PR review >>>===--------------------------#
 
-### Get a PR from upstream
+# (2) Get a PR from upstream
 # bg-getpr <pr-number>
 
-### Checkout the pr to review with `git checkout pr/<number>`
+# (3) Checkout the pr to review with `git checkout pr/<number>`
 # bg-pr <pr-number> 
 
-### Checkout the commit to test
+# (4) Checkout the commit to test
 # git checkout <commit>
 
-### Get the changed files with
+# (5) Get the changed files with
 # git diff --name-only <last-reviewed-commit> <last-commit>
 
-### Examine the changes in each file
+# (6) Examine the changes in each file
 # git difftool <last-reviewed-commit> <last-commit> -- <file>
 
 #--------------------------===<<< Build and test >>>===-----------------------#

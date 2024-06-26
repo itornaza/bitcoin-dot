@@ -185,6 +185,9 @@ bg-branch-update() {
 
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
+# TODO: Discard stuff not used in practice in this section and 
+# maybe refer to the generic use cases
+
 # Search for pattern in a repository
 alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
 
@@ -198,6 +201,7 @@ bgd-files() {
         git diff --name-only HEAD HEAD~$1 
     fi
 }
+# git diff --name-only <commit-1> <commit-2>
 
 # Files that have differences between this branch and master
 alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"

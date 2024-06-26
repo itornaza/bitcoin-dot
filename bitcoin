@@ -435,8 +435,6 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 # bg-update
 # bg-branch-update
 
-#----------------------------===<<< PR review >>>===--------------------------#
-
 # (2) Get a PR from upstream
 # bg-getpr <pr-number>
 
@@ -446,19 +444,19 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 # (4) Checkout the commit to test
 # git checkout <commit>
 
-# (5) Get the changed files with
-# git diff --name-only <last-reviewed-commit> <last-commit>
-
-# (6) Examine the changes in each file
-# git difftool <last-reviewed-commit> <last-commit> -- <file>
-
-#--------------------------===<<< Build and test >>>===-----------------------#
-
-# Build and run unit and functional tests from clean
+# (5) Build and run unit and functional tests from clean
 alias bb="bconfigure && bmake && bcheck && btest"
 
-# Build and run unit and extended functional tests from clean
+# (6) Build and run unit and extended functional tests from clean
 alias bbe="bconfigure && bmake && bcheck && btest-ext"
+
+# (7) Get the changed files with
+# git diff --name-only <last-reviewed-commit> <last-commit>
+
+# (8) Examine the changes in each file
+# git difftool <last-reviewed-commit> <last-commit> -- <file>
+
+#---------------------===<<< Build and test reference >>>===------------------#
 
 # bdistclean
 # bclean

@@ -151,6 +151,15 @@ alias bg-ed="git config --global -e"
 # Name of the current branch
 alias bg-name="git branch --show-current"
 
+# Commit hash of the current commit
+alias bg-last="git rev-parse HEAD"
+
+# Commit hash of the initial commit
+alias bg-first="git log --reverse | head -n 1"
+
+# List all tracked files in the repository
+alias bg-ls="git ls-files"
+
 # Reset any changes and remove new files since the last commit
 alias bg-reset="git reset --hard HEAD; git clean -fd;"
 
@@ -210,10 +219,8 @@ bgd-files() {
 alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"
 
 # Show diffs of a file on current branch file compared to master 
-# git difftool <commit-to-compare-with> <file>
 alias bgd-tool="git difftool origin/$BGMASTER_ " # <file>
-
-# Generic case
+# git difftool <commit-to-compare-with> <file>
 # git difftool <combmit1> <commit2> -- <file>
 
 # Differences between ranges of commits to use after rebasing
@@ -225,15 +232,6 @@ bgd-range() {
 }
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
-
-# Commit hash of the current commit
-alias bg-last="git rev-parse HEAD"
-
-# Commit hash of the initial commit
-alias bg-first="git log --reverse | head -n 1"
-
-# List all tracked files in the repository
-alias bg-ls="git ls-files"
 
 # Get the commit which changed last a line in a file
 bg-blame() {
@@ -458,10 +456,10 @@ alias bb="bconfigure && bmake && bcheck && btest"
 alias bbe="bconfigure && bmake && bcheck && btest-ext"
 
 # (7) Get the changed files with
-# git diff --name-only <last-reviewed-commit> <last-commit>
+# git diff --name-only <last-reviewed-commit> <new-commit>
 
 # (8) Examine the changes in each file
-# git difftool <last-reviewed-commit> <last-commit> -- <file>
+# git difftool <last-reviewed-commit> <new-commit> -- <file>
 
 #---------------------===<<< Build and test reference >>>===------------------#
 

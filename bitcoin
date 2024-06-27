@@ -125,6 +125,9 @@ alias bd="$BPATH_/src/bitcoind"
 alias bcli="$BPATH_/src/bitcoin-cli"
 alias bclin="$BPATH_/src/bitcoin-cli -named"
 
+# Kill bitcoind if forgotten to stop it properly
+alias bkill="pkill -9 bitcoind;"
+
 #-----------------------------------------------------------------------------#
 #                                     GIT                                     #
 #                           (bg and BG - prefixes)                            #

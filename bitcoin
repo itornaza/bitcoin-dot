@@ -186,6 +186,7 @@ bg-update() {
     git merge upstream/master
     git push origin master
     echo "Enjoy 😉!"
+}
 
 # Update the current branch with all changes from master
 bg-branch-update() {
@@ -354,6 +355,13 @@ btest-unit() {
     cd src/test/
     test_bitcoin
     b
+}
+
+btest-unit-one() {
+    # $1: module (file name)
+    # $2: test case
+    b
+    ./src/test/test_bitcoin --run_test=$1/$2
 }
 
 # Run util tests without recompiling

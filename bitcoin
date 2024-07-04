@@ -194,12 +194,12 @@ bg-branch-update() {
     git rebase
 }
 
-#----------------------===<<< Git searches and diffs >>>===-------------------#
+#------------------------===<<< Git lists of files >>>===---------------------#
 
 # Search for files including a pattern in a repository
 alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
 
-# List of files w/ differences between given number of commits, default is 1
+# List of files w/differences between given number of commits, default is 1
 # Hint: Run git log before to see how many commits back is the upstream/master
 bgd-files() { 
     # $1: Number of commits backwards
@@ -216,13 +216,6 @@ alias bgd-commits=" git diff --name-only " # <commit-1> <commit-2>
 # List of files  differences between this branch and the upstream
 alias bgd-files-upstream="git diff --name-only upstream/$BGMASTER_ HEAD"
 
-# File changes on current branch compared to upstream 
-alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
-
-# File changes generic case 
-# git difftool <commit-to-compare-with-current> <file>
-# git difftool <commit1> <commit2> -- <file>
-
 # Differences between ranges of commits to use after rebasing
 bgd-range() {
     # $1: commit-1
@@ -230,6 +223,15 @@ bgd-range() {
     # $3: range 
     git range-diff $1~$3..$1 $2~$3..$2
 }
+
+#------------------------===<<< Git changes in file >>>===--------------------#
+
+# File changes on current branch compared to upstream 
+alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
+
+# File changes generic case 
+# git difftool <commit-to-compare-with-current> <file>
+# git difftool <commit1> <commit2> -- <file>
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
 

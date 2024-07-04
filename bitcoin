@@ -186,7 +186,6 @@ bg-update() {
     git merge upstream/master
     git push origin master
     echo "Enjoy 😉!"
-}
 
 # Update the current branch with all changes from master
 bg-branch-update() {
@@ -197,14 +196,11 @@ bg-branch-update() {
 
 #----------------------===<<< Git searches and diffs >>>===-------------------#
 
-# TODO: Discard stuff not used in practice in this section and 
-# maybe refer to the generic use cases
-
-# Search for pattern in a repository
+# Search for files including a pattern in a repository
 alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
 
-# Differences to a given number of commits back, default is 1
-# Run a git log to see how many commits back is the upstream/master, etc
+# List of files w/ differences between given number of commits, default is 1
+# Hint: Run git log before to see how many commits back is the upstream/master
 bgd-files() { 
     # $1: Number of commits backwards
     if [ $# -eq 0 ]; then
@@ -213,15 +209,19 @@ bgd-files() {
         git diff --name-only HEAD HEAD~$1 
     fi
 }
-# git diff --name-only <commit-1> <commit-2>
 
-# Files that have differences between this branch and master
-alias bgd-files-master="git diff --name-only origin/$BGMASTER_ HEAD"
+# List of files  differences  between two commits
+alias bgd-commits=" git diff --name-only " # <commit-1> <commit-2>
 
-# Show diffs of a file on current branch file compared to master 
-alias bgd-tool="git difftool origin/$BGMASTER_ " # <file>
-# git difftool <commit-to-compare-with> <file>
-# git difftool <combmit1> <commit2> -- <file>
+# List of files  differences between this branch and the upstream
+alias bgd-files-upstream="git diff --name-only upstream/$BGMASTER_ HEAD"
+
+# File changes on current branch compared to upstream 
+alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
+
+# File changes generic case 
+# git difftool <commit-to-compare-with-current> <file>
+# git difftool <commit1> <commit2> -- <file>
 
 # Differences between ranges of commits to use after rebasing
 bgd-range() {

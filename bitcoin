@@ -110,6 +110,10 @@ alias blog-test="$ED_ $BDATA_/testnet3/debug.log"
 alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 
+# Visual Studio Code launch and debug workspace configurations
+alias vs-bitdev="code ~/Documents/config/vscode/bitdev.code-workspace"
+alias vs-lldb="code ~/Documents/config/vscode/lldb.code-workspace"
+
 #-----------------------------------------------------------------------------#
 #                           BITCOIND AND BITCOIN-CLI                          #
 #-----------------------------------------------------------------------------#
@@ -445,6 +449,9 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #-----------------------------------------------------------------------------#
 #                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
+
+# (0) Open workspace on vscode
+# vs-bitdev or vs-lldb
 
 # (1) Get all updates from upstream 
 # bg-update

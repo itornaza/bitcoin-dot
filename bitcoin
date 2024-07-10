@@ -312,10 +312,16 @@ alias bcpp=$BCPP_
 alias blldb=$BLLDB_
 
 # Configure
-alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --with-incompatible-bdb --enable-surpress-external-warnings"
+alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+--with-incompatible-bdb --enable-surpress-external-warnings"
+
 alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_"
-alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
-alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+
+alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+--with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
+
+alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+--enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 
 # Make
 alias bdistclean="make distclean" # Includes make clean as well

@@ -451,32 +451,67 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #                                  CHECKLISTS                                 #
 #-----------------------------------------------------------------------------#
 
-# (0) Open workspace on vscode depending on what to debug
-# vs-bitcoind, vs-unit, vs-functional
+#-------------------------------===<<< Set up >>>===--------------------------#
 
-# (1) Get all updates from upstream 
+# (1) Get all updates from upstream, this leaves us to the master branch 
 # bg-update
-# bg-branch-update
 
-# (2) Get a PR from upstream
+# (2) Get the PR to review from upstream
 # bg-getpr <pr-number>
 
 # (3) Checkout the pr to review with `git checkout pr/<number>`
+#     Note: We need to locate the last commit from GitHub
 # bg-pr <pr-number> 
 
 # (4) Checkout the commit to test
 # git checkout <commit>
 
-# (5) Build and run unit and functional tests from clean
-alias bb="bconfigure && bmake && bcheck && btest"
+#-----------------------------===<<< Debug cpp >>>===-------------------------#
 
-# (6) Build and run unit and extended functional tests from clean
+# (0) Set up checklist
+
+# (1) Open workspace on vscode depending on what to debug and follow the 
+#     instructions at the .vscode-workspace file of the workspace
+# vs-bitcoind || vs-unit
+
+#---------------------------===<<< Debug py-->cpp >>>===----------------------#
+
+# (0) Set up checklist
+
+# (1) Open workspace on vscode depending on what to debug and follow the 
+#     instructions at the .vscode-workspace file of the workspace
+# vs-functional
+
+# (2) Set breakpoints to both cpp and py files 
+
+# (3) Launch the debugger for the test through the "launch" configuration
+
+# (4) Execution stops at the py breakpoint
+
+# (5) Attach the python process with the token from the dropdown to lldb 
+
+# (6) Run to continue debugging on the cpp file
+
+#-----------------------------===<<< PR review >>>===-------------------------#
+
+# (0) Set up checklist
+
+# (1a) Build and run unit and functional tests from clean
+alias bb="bconfigure && bmake && bcheck && btest"
+# To independently run the extended tests afterwards use
+# btest-ext
+
+# (1b) Build and run unit and extended functional tests from clean
 alias bbe="bconfigure && bmake && bcheck && btest-ext"
 
-# (7) Get the changed files with
+# (2) Get the changed files with
+#     Note: The HEAD is set to the commit we checked out. In order to get the 
+#     changed files that this PR touched upon, we may run a git log to find the
+#     nearest merge commit to test against 
+# bgd-files <number-of-commits-backwards>, or
 # git diff --name-only <last-reviewed-commit> <new-commit>
 
-# (8) Examine the changes in each file
+# (3) Examine the changes in each file, will launch on the prefered editor
 # git difftool <last-reviewed-commit> <new-commit> -- <file>
 
 #---------------------===<<< Build and test reference >>>===------------------#

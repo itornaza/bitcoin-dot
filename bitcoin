@@ -36,17 +36,17 @@
 #-----------------------------------------------------------------------------#
 
 # (1) Get all updates from upstream, this leaves us to the master branch 
-# bg-update
+# % bg-update
 
 # (2) Get the PR to review from upstream
-# bg-getpr <pr-number>
+# % bg-getpr <pr-number>
 
 # (3) Checkout the pr to review with `git checkout pr/<number>`
 #     Note: We need to locate the last commit from GitHub
-# bg-pr <pr-number> 
+# % bg-pr <pr-number> 
 
 # (4) Checkout the commit to test
-# git checkout <commit>
+# % git checkout <commit>
 
 #-----------------------------------------------------------------------------#
 #                                   PR REVIEWS                                #
@@ -66,7 +66,7 @@
 #     Note: The HEAD is set to the commit we checked out. In order to get the 
 #     changed files that this PR touched upon, we may run a git log to find the
 #     nearest merge commit to test against 
-# % bgd-files <number-of-commits-backwards>, or
+# % bgd-files <number-of-commits-backwards> # or
 # % git diff --name-only <last-reviewed-commit> <new-commit>
 
 # (3) Examine the changes in each file, will launch on the prefered editor
@@ -222,8 +222,8 @@ alias vs-functional="code ~/Documents/config/vscode/functional.code-workspace"
 
 # GLOBAL: System-wide bitcoind and bitcoin-cli found in /usr/local/bin
 # Build with `make install` and only for the latest stable release!
-# bitcoind (kept as is)
-# bitcoin-cli (kept as is)
+# % bitcoind # kept as is
+# % bitcoin-cli # kept as is
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path

@@ -19,7 +19,108 @@
 #                                                                             #
 # 5. Read all `Caution!` contained in the file before use                     #
 #                                                                             #
+# 6. The file has two sections, checklists and zsh                            #
+#    - To go through procedures for hopefully everyday work use the checklist #
+#      as reference which is by no means exhastive                            #
+#    - To change intended behavior or optimise  commands edit the zsh section #
 ###############################################################################
+
+
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#                                  CHECKLISTS                                 #
+#//////////////////////////////////////////////////////////////////////////////
+
+
+#-----------------------------------------------------------------------------#
+#                                   SET UP                                    #
+#-----------------------------------------------------------------------------#
+
+# (1) Get all updates from upstream, this leaves us to the master branch 
+# bg-update
+
+# (2) Get the PR to review from upstream
+# bg-getpr <pr-number>
+
+# (3) Checkout the pr to review with `git checkout pr/<number>`
+#     Note: We need to locate the last commit from GitHub
+# bg-pr <pr-number> 
+
+# (4) Checkout the commit to test
+# git checkout <commit>
+
+#-----------------------------------------------------------------------------#
+#                                   PR REVIEWS                                #
+#-----------------------------------------------------------------------------#
+
+# (0) Set up checklist
+
+# (1a) Build and run unit and functional tests from clean
+# % bb
+# To independently run the extended tests afterwards use
+# % btest-ext
+
+# (1b) Build and run unit and extended functional tests from clean
+# % bbe
+
+# (2) Get the changed files with
+#     Note: The HEAD is set to the commit we checked out. In order to get the 
+#     changed files that this PR touched upon, we may run a git log to find the
+#     nearest merge commit to test against 
+# % bgd-files <number-of-commits-backwards>, or
+# % git diff --name-only <last-reviewed-commit> <new-commit>
+
+# (3) Examine the changes in each file, will launch on the prefered editor
+# % git difftool <last-reviewed-commit> <new-commit> -- <file>
+
+#-----------------------------------------------------------------------------#
+#                             BUILD AND TEST REFERENCE                        #
+#-----------------------------------------------------------------------------#
+
+# % bdistclean
+# % bclean
+# % bconfigure
+# % bmake
+# % bbuild
+# % bcheck
+# % btest
+# % btest-ext
+# % bclean-all
+
+#-----------------------------------------------------------------------------#
+#                                   DEBUG CPP                                 #
+#-----------------------------------------------------------------------------#
+
+# (0) Set up checklist
+
+# (1) Open workspace on vscode depending on what to debug and follow the 
+#     instructions at the .vscode-workspace file of the workspace
+# % vs-bitcoind || vs-unit
+
+#-----------------------------------------------------------------------------#
+#                               DEBUG PY --> CPP                              #
+#-----------------------------------------------------------------------------#
+
+# (0) Set up checklist
+
+# (1) Open workspace on vscode depending on what to debug and follow the 
+#     instructions at the .vscode-workspace file of the workspace
+# % vs-functional
+
+# (2) Set breakpoints to both cpp and py files 
+
+# (3) Launch the debugger for the test through the "launch" configuration
+
+# (4) Execution stops at the py breakpoint
+
+# (5) Attach the python process with the token from the dropdown to lldb 
+
+# (6) Run to continue debugging on the cpp file
+
+
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#                                       ZSH                                   #
+#//////////////////////////////////////////////////////////////////////////////
+
 
 #-----------------------------------------------------------------------------#
 #                                   VARIABLES                                 #
@@ -236,8 +337,8 @@ bgd-range() {
 alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
 
 # File changes generic case 
-# git difftool <commit-to-compare-with-current> <file>
-# git difftool <commit1> <commit2> -- <file>
+# % git difftool <commit-to-compare-with-current> <file>
+# % git difftool <commit1> <commit2> -- <file>
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
 
@@ -445,6 +546,14 @@ bcov() {
     make cov
 }
 
+#----------------------===<<< Build and test combos  >>>===-------------------#
+
+# Build and run unit and functional tests from clean
+alias bb="bconfigure && bmake && bcheck && btest"
+
+# Build and run unit and extended functional tests from clean
+alias bbe="bconfigure && bmake && bcheck && btest-ext"
+
 #-----------------------------------------------------------------------------#
 #                       DOCUMENTATION AND CODING STYLE                        #
 #-----------------------------------------------------------------------------#
@@ -473,81 +582,3 @@ alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 # Clean up everything in the build and test chains in case of trouble
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
-
-#-----------------------------------------------------------------------------#
-#                                  CHECKLISTS                                 #
-#-----------------------------------------------------------------------------#
-
-#-------------------------------===<<< Set up >>>===--------------------------#
-
-# (1) Get all updates from upstream, this leaves us to the master branch 
-# bg-update
-
-# (2) Get the PR to review from upstream
-# bg-getpr <pr-number>
-
-# (3) Checkout the pr to review with `git checkout pr/<number>`
-#     Note: We need to locate the last commit from GitHub
-# bg-pr <pr-number> 
-
-# (4) Checkout the commit to test
-# git checkout <commit>
-
-#-----------------------------===<<< Debug cpp >>>===-------------------------#
-
-# (0) Set up checklist
-
-# (1) Open workspace on vscode depending on what to debug and follow the 
-#     instructions at the .vscode-workspace file of the workspace
-# vs-bitcoind || vs-unit
-
-#---------------------------===<<< Debug py-->cpp >>>===----------------------#
-
-# (0) Set up checklist
-
-# (1) Open workspace on vscode depending on what to debug and follow the 
-#     instructions at the .vscode-workspace file of the workspace
-# vs-functional
-
-# (2) Set breakpoints to both cpp and py files 
-
-# (3) Launch the debugger for the test through the "launch" configuration
-
-# (4) Execution stops at the py breakpoint
-
-# (5) Attach the python process with the token from the dropdown to lldb 
-
-# (6) Run to continue debugging on the cpp file
-
-#-----------------------------===<<< PR review >>>===-------------------------#
-
-# (0) Set up checklist
-
-# (1a) Build and run unit and functional tests from clean
-alias bb="bconfigure && bmake && bcheck && btest"
-# To independently run the extended tests afterwards use
-# btest-ext
-
-# (1b) Build and run unit and extended functional tests from clean
-alias bbe="bconfigure && bmake && bcheck && btest-ext"
-
-# (2) Get the changed files with
-#     Note: The HEAD is set to the commit we checked out. In order to get the 
-#     changed files that this PR touched upon, we may run a git log to find the
-#     nearest merge commit to test against 
-# bgd-files <number-of-commits-backwards>, or
-# git diff --name-only <last-reviewed-commit> <new-commit>
-
-# (3) Examine the changes in each file, will launch on the prefered editor
-# git difftool <last-reviewed-commit> <new-commit> -- <file>
-
-#---------------------===<<< Build and test reference >>>===------------------#
-
-# bdistclean
-# bclean
-# bconfigure
-# bmake
-# bbuild (bconfigure && bmake)
-# bcheck
-# btest
-# btest-ext

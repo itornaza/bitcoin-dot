@@ -274,7 +274,8 @@ alias bg-log-removed="git log -- "
 # Get the PR discussion from a commit hash
 bg-logp-r() {
     # $1: commit hash
-    git log --merges --reverse --oneline --ancestry-path $1..origin/$BGMASTER_ | head -n 1
+    git log --merges --reverse --oneline --ancestry-path \
+        $1..origin/$BGMASTER_ | head -n 1
 }
 
 #-----------------------------===<<< Git rebase >>>===------------------------#
@@ -313,15 +314,16 @@ alias blldb=$BLLDB_
 
 # Configure
 alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
---with-incompatible-bdb --enable-surpress-external-warnings"
+                  --with-incompatible-bdb --enable-surpress-external-warnings"
 
 alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_"
 
 alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
---with-incompatible-bdb --enable-surpress-external-warnings --enable-debug"
+                        --with-incompatible-bdb 
+                        --enable-surpress-external-warnings --enable-debug"
 
 alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
---enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+                      --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 
 # Make
 alias bdistclean="make distclean" # Includes make clean as well
@@ -340,15 +342,26 @@ alias bbuild="bconfigure && bmake"
 #---------------------------===<<< Test support >>>===------------------------#
 
 # RAM disk to speed up or constraint testing environment size
-alias bcreate-ram="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
-alias bcreate-ram-ext="diskutil erasevolume HFS+ ramdisk $(hdiutil attach -nomount ram://$RAMDISK_SIZE_EXT_)"
+alias bcreate-ram="diskutil erasevolume HFS+ ramdisk \
+                  $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
+
+alias bcreate-ram-ext="diskutil erasevolume HFS+ ramdisk \
+                       $(hdiutil attach -nomount ram://$RAMDISK_SIZE_EXT_)"
+
 alias bdestroy-ram="umount /Volumes/ramdisk"
 
 # Clean up node seeding and debug files after manual tests
-alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat $BDATA_/debug.log"
-alias bdata-clear-test="rm -fr $BDATA_/testnet3/anchors.dat $BDATA_/testnet3/peers.dat $BDATA_/testnet3/debug.log"
-alias bdata-clear-signet="rm -fr $BDATA_/signet/anchors.dat $BDATA_/signet/peers.dat $BDATA_/signet/debug.log"
-alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat $BDATA_/regtest/peers.dat $BDATA_/regtest/debug.log"
+alias bdata-clear-main="rm -fr $BDATA_/anchors.dat $BDATA_/peers.dat \
+                        $BDATA_/debug.log"
+
+alias bdata-clear-test="rm -fr $BDATA_/testnet3/anchors.dat \
+                        $BDATA_/testnet3/peers.dat $BDATA_/testnet3/debug.log"
+
+alias bdata-clear-signet="rm -fr $BDATA_/signet/anchors.dat \
+                        $BDATA_/signet/peers.dat $BDATA_/signet/debug.log"
+
+alias bdata-clear-regtest="rm -fr $BDATA_/regtest/anchors.dat \
+                        $BDATA_/regtest/peers.dat $BDATA_/regtest/debug.log"
 
 # Wipe out regtest for a clean run
 alias bdata-erase-regtest="rm -fr $BDATA_/regtest/*"
@@ -395,16 +408,19 @@ alias btest-plain="$BFUNC_/test_runner.py"
 
 # Attach ramdisk support to functional tests
 # Note: Have to manually create and destroy the ramdisk
-alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache --tmpdir=/Volumes/ramdisk/tmp"
+alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache \
+                --tmpdir=/Volumes/ramdisk/tmp"
 
 # Functional tests (optimum standalone configuration)
 alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
 # Extended functional tests (optimum standalone configuration)
-alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended && bdestroy-ram"
+alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
+                --extended && bdestroy-ram"
 
 # Coverage for the exteded functional tests to uncover missing rpcs from harness
-alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended --coverage && bdestroy-ram"
+alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
+                --coverage && bdestroy-ram"
 
 #----------------------------===<<< Fuzz tests >>>===-------------------------#
 
@@ -413,10 +429,12 @@ alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended --cov
 #---------------------------===<<< Test reports >>>===------------------------#
 
 # Unit test coverage report
-alias btest-report="open -a /Applications/Firefox.app $BPATH_/test_bitcoin.coverage/index.html"
+alias btest-report="open -a /Applications/Firefox.app \
+                    $BPATH_/test_bitcoin.coverage/index.html"
 
 # Unit and functional test coverage report
-alias btest-report-total="open -a /Applications/Firefox.app $BPATH_/total.coverage/index.html"
+alias btest-report-total="open -a /Applications/Firefox.app \
+                         $BPATH_/total.coverage/index.html"
 
 # Test coverage
 # TODO: cannot make coverage work yet!
@@ -436,12 +454,15 @@ alias bdox-make="make docs"
 alias bdox-clean="make clean-docs"
 
 # Denoise of errors from external dependencies with bear and clang-tidy
-alias bct-make="make clean && bear --config src/.bear-tidy-config -- make -j $NCORES_"
+alias bct-make="make clean && bear --config src/.bear-tidy-config -- \
+                make -j $NCORES_"
+
 alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
 
 # Format last commit with 0 lines of context, call from the git root folder,
 # uses clang-format with the config defined in src/.clang-format
-alias bformat="git diff -U0 HEAD~1.. | ./contrib/devtools/clang-format-diff.py -p1 -i -v"
+alias bformat="git diff -U0 HEAD~1.. | \
+              ./contrib/devtools/clang-format-diff.py -p1 -i -v"
 
 # View doxygen generated documentation on firefox
 alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"

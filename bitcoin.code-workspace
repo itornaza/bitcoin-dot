@@ -1,6 +1,5 @@
 {
-    /**
-     * bitcoind.code-workspace
+    /** bitcoind.code-workspace
      *
      * Configuration file for debugging bitcoin with the help of the visual
      * studio code debugging aide. Requires  a local installation of LLVM 
@@ -12,7 +11,7 @@
     "folders": [
     {
         // Path to the bitcoin fork root directory
-        "path": "../../projects/bitdev/bitcoin"
+        "path": "../bitcoin"
     }
     ],
     "settings": {},
@@ -20,8 +19,7 @@
     {
         "configurations": [
         {
-            /**
-             * Launch lldb on bitcoind
+            /** Launch lldb on bitcoind
              *
              * - Run as standalone on bitcoind
              * - It is called implicitly by the attach config below after
@@ -43,8 +41,7 @@
             "miDebuggerPath": "/opt/homebrew/opt/llvm/bin/lldb"
         },
         {
-            /**
-             * Launch lldb on test_bitcoin
+            /** Launch lldb on test_bitcoin
              *
              * - Launches a debug session on a particular unit test in cpp which
              *   is tightly connected to the cpp codebase as well
@@ -65,8 +62,7 @@
             "miDebuggerPath": "/opt/homebrew/opt/llvm/bin/lldb"
         },
         {
-            /**
-             * Launch lldb on python test
+            /** Launch lldb on python test
              *
              * - Set the name of the desired functional test in the `program`
              *   section below
@@ -79,8 +75,7 @@
             "console": "integratedTerminal"
         },
         {
-            /**
-             * Attach bitcoind to an existing python functional test session
+            /**  Attach bitcoind to an existing python functional test session
              *
              * - Launch a `Debug functional test` session first
              * - Attach the python process id that has the token from the 

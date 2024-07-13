@@ -4,9 +4,11 @@
 
 This is a [simple file](https://github.com/itornaza/btc-dot/blob/main/bitcoin) that defines aliases and exports in order to simplify and streamline the Bitcoin Core testing and development process. It assumes you are working from a fork.
 
+Moreover, a visual studio code workspace configuration file is included as well for anyone that wants to run debuggin sessions with the convenience of an IDE. 
+
 ## Systems
 
-Intended to be used on computers running macos and the zsh shell.
+Intended to be used on computers running macos and the zsh shell as well optional use of vscode for more refined debugging sessions.
 
 ## How to use
 

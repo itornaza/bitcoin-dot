@@ -8,21 +8,25 @@
 #                                                                             #
 ###############################################################################
 #                                                                             #
-# 1. Intended for macos but can be easily modified for other UNIX and Linux   #
+# 1. Intended for macos but can be easily modified for other UNIX and Linux.  #
+#    If you are using visual studio code, there is an optional associated     #
+#    file with debug configuration options                                    #
 #                                                                             #
 # 2. To include it in your shell write the following line in ~/.zshrc         #
 #    `source <path-to-this-file>`                                             #
 #                                                                             #
-# 3. For more procedural options go to the bottom of the file                 #
+# 3. For more procedural options go to the checklist section                  #
 #                                                                             #
 # 4. All git operations assume you are working from a fork of bitcoin         #
 #                                                                             #
-# 5. Read all `Caution!` contained in the file before use                     #
+# 5. Read all `Caution!` tags in the file before first use of this file       #
+#    or live with the consequences!                                           #
 #                                                                             #
 # 6. The file has two sections, checklists and zsh                            #
 #    - To go through procedures for hopefully everyday work use the checklist #
 #      as reference which is by no means exhastive                            #
 #    - To change intended behavior or optimise  commands edit the zsh section #
+#                                                                             #
 ###############################################################################
 
 

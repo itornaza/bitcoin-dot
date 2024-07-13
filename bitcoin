@@ -94,7 +94,9 @@
 
 # (1) Open workspace on vscode depending on what to debug and follow the 
 #     instructions at the .vscode-workspace file of the workspace
-# % vs-bitcoind || vs-unit
+# % vs-bitcoin
+
+# (2) Choose between the debug configurations for bitcoin or unit tests
 
 #-----------------------------------------------------------------------------#
 #                               DEBUG PY --> CPP                              #
@@ -104,7 +106,7 @@
 
 # (1) Open workspace on vscode depending on what to debug and follow the 
 #     instructions at the .vscode-workspace file of the workspace
-# % vs-functional
+# % vs-bitcoin
 
 # (2) Set breakpoints to both cpp and py files 
 
@@ -212,6 +214,10 @@ alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 
 # Visual Studio Code launch and debug workspace configurations
+alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
+
+# TODO: Remove the following lines and corresponding files after testing 
+# vs-bitcoin that includes all of them anyway!
 alias vs-bitcoind="code ~/Documents/config/vscode/bitcoind.code-workspace"
 alias vs-unit="code ~/Documents/config/vscode/unit.code-workspace"
 alias vs-functional="code ~/Documents/config/vscode/functional.code-workspace"

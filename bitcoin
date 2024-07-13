@@ -96,11 +96,14 @@
 
 # (0) Set up checklist
 
-# (1) Open workspace on vscode depending on what to debug and follow the 
+# (1) Build for debugging (btest and btest-ext for functional if needed)
+# % bbd
+
+# (2) Open workspace on vscode depending on what to debug and follow the 
 #     instructions at the .vscode-workspace file of the workspace
 # % vs-bitcoin
 
-# (2) Choose between the debug configurations for bitcoin or unit tests
+# (3) Choose between the debug configurations for bitcoin or unit tests
 
 #-----------------------------------------------------------------------------#
 #                               DEBUG PY --> CPP                              #
@@ -108,19 +111,22 @@
 
 # (0) Set up checklist
 
-# (1) Open workspace on vscode depending on what to debug and follow the 
+# (1) Build for debugging (btest and btest-ext for functional if needed)
+# % bbd
+
+# (2) Open workspace on vscode depending on what to debug and follow the 
 #     instructions at the .vscode-workspace file of the workspace
 # % vs-bitcoin
 
-# (2) Set breakpoints to both cpp and py files 
+# (3) Set breakpoints to both cpp and py files 
 
-# (3) Launch the debugger for the test through the "launch" configuration
+# (4) Launch the debugger for the test through the "launch" configuration
 
-# (4) Execution stops at the py breakpoint
+# (5) Execution stops at the py breakpoint
 
-# (5) Attach the python process with the token from the dropdown to lldb 
+# (6) Attach the python process with the token from the dropdown to lldb 
 
-# (6) Run to continue debugging on the cpp file
+# (7) Run to continue debugging on the cpp file
 
 
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -557,6 +563,9 @@ alias bb="bconfigure && bmake && bcheck && btest"
 
 # Build and run unit and extended functional tests from clean
 alias bbe="bconfigure && bmake && bcheck && btest-ext"
+
+# Build for debugging with unit tests only
+alias bbd="bconfigure-debug && bmake && bcheck"
 
 #-----------------------------------------------------------------------------#
 #                       DOCUMENTATION AND CODING STYLE                        #

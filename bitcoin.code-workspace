@@ -53,8 +53,7 @@
             
             // Run a unit test by defining the module and test names in args
             "program": "${workspaceFolder}/src/test/test_bitcoin",
-            "args": ["--run_test=sv2_noise_tests/handshake_and_transport_test"],
-
+            "args": ["--run_test=system_tests/run_command"],
             "cwd": "${workspaceFolder}"
             "stopAtEntry": false,
             "externalConsole": true,
@@ -78,6 +77,8 @@
             /**  Attach bitcoind to an existing python functional test session
              *
              * - Launch a `Debug functional test` session first
+             * - When it stops at the breakpoint in python, select and run the
+             *   attach debug configuration
              * - Attach the python process id that has the token from the 
              *   dropdown list and then select play and step over to get 
              *   to the breakpoint in the cpp file

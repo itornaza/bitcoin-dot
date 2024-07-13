@@ -1,0 +1,105 @@
+{
+    /**
+     * bitcoind.code-workspace
+     *
+     * Configuration file for debugging bitcoin with the help of the visual
+     * studio code debugging aide. Requires  a local installation of LLVM 
+     * that matches Bitcoin prerequisites
+     *
+     * Part of the btc-dot project https://github.com/itornaza/btc-dot 
+     */
+
+    "folders": [
+    {
+        // Path to the bitcoin fork root directory
+        "path": "../../projects/bitdev/bitcoin"
+    }
+    ],
+    "settings": {},
+    "launch": 
+    {
+        "configurations": [
+        {
+            /**
+             * Launch lldb on bitcoind
+             *
+             * - Run as standalone on bitcoind
+             * - It is called implicitly by the attach config below after
+             *   initiating a python debug session on a functional test
+             * - No need to provide any extra arguments
+             */
+            "name": "Debug bitcoind",
+            "type": "lldb",
+            "request": "launch",
+
+            // Run bicoind with bitcoin.conf settings and no extra arguments
+            "program": "${workspaceFolder}/src/bitcoind",
+            "args": [],
+            
+            "cwd": "${workspaceFolder}"
+            "stopAtEntry": false,
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "miDebuggerPath": "/opt/homebrew/opt/llvm/bin/lldb"
+        },
+        {
+            /**
+             * Launch lldb on test_bitcoin
+             *
+             * - Launches a debug session on a particular unit test in cpp which
+             *   is tightly connected to the cpp codebase as well
+             * - Specify the module and the unit test names in the `args` section
+             */
+            "name": "Debug unit test",
+            "type": "lldb",
+            "request": "launch",
+            
+            // Run a unit test by defining the module and test names in args
+            "program": "${workspaceFolder}/src/test/test_bitcoin",
+            "args": ["--run_test=sv2_noise_tests/handshake_and_transport_test"],
+
+            "cwd": "${workspaceFolder}"
+            "stopAtEntry": false,
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "miDebuggerPath": "/opt/homebrew/opt/llvm/bin/lldb"
+        },
+        {
+            /**
+             * Launch lldb on python test
+             *
+             * - Set the name of the desired functional test in the `program`
+             *   section below
+             * - Set a breakpoint somewhere before the call to cpp
+             */
+            "name": "Debug functional test",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/test/functional/feature_taproot.py",
+            "console": "integratedTerminal"
+        },
+        {
+            /**
+             * Attach bitcoind to an existing python functional test session
+             *
+             * - Launch a `Debug functional test` session first
+             * - Attach the python process id that has the token from the 
+             *   dropdown list and then select play and step over to get 
+             *   to the breakpoint in the cpp file
+             * - Set a breakpoint inside the cpp file that the functional test
+             *   is going to call so the debugger will actually stop somewhere!!
+             */
+            "name": "Attach bitcoind to functional test",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${workspaceFolder}/src/bitcoind",
+            "processId": "${command:pickProcess}",
+            "MIMode": "lldb",
+            "cwd": "${workspaceFolder}"
+        }
+        ],
+        "version": "2.0.0"
+    }
+}
+
+

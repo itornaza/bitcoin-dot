@@ -96,4 +96,4 @@ On debugging with Visual Studio code or not:
 
 ## Lisence
 
-`Bitcoin dot` is released under the terms of the [MIT license](https://opensource.org/licenses/MIT)
+[Bitcoin dot](#bitcoin-dot) is released under the terms of the [MIT license](https://opensource.org/licenses/MIT)

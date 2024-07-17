@@ -10,7 +10,8 @@
 #                                                                             #
 # 1. Intended for macos but can be easily modified for other UNIX and Linux.  #
 #    If you are using visual studio code, there is an optional associated     #
-#    file with debug configuration options                                    #
+#    file with debug configuration options with instructions in the comments  #
+#    as well                                                                  #
 #                                                                             #
 # 2. To include it in your shell write the following line in ~/.zshrc         #
 #    `source <path-to-this-file>`                                             #

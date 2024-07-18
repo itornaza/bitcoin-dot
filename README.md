@@ -46,6 +46,8 @@ It is divided into the following two main sections.
 
 - `zsh` which contains the actual commands that do the job. Feel free to add you own commands, rename the existing ones or do whatever you deem appropriate to suit your needs. This section is also divided to logical groupings like, `Installations`, `Git`, `Build`, `Tests`, etc to further guide you through the process or help you locate desired commands more easily. 
 
+- The `git difftool` can also be easily intergrated with vscode as well for a more visual spot of the differences.
+
 ### How to use
 
 To include the [bitcoin](https://github.com/itornaza/btc-dot/blob/main/bitcoin) configuration in your shell environment include the following line in `~/.zshrc` like.

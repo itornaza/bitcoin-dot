@@ -9,24 +9,26 @@
 ###############################################################################
 #                                                                             #
 # 1. Intended for macos but can be easily modified for other UNIX and Linux.  #
-#    If you are using visual studio code, there is an optional associated     #
-#    file with debug configuration options with instructions in the comments  #
-#    as well                                                                  #
 #                                                                             #
 # 2. To include it in your shell write the following line in ~/.zshrc         #
 #    `source <path-to-this-file>`                                             #
 #                                                                             #
-# 3. For more procedural options go to the checklist section                  #
-#                                                                             #
 # 4. All git operations assume you are working from a fork of bitcoin         #
 #                                                                             #
 # 5. Read all `Caution!` tags in the file before first use of this file       #
-#    or live with the consequences!                                           #
+#    or just live with the consequences!                                      #
 #                                                                             #
 # 6. The file has two sections, checklists and zsh                            #
-#    - To go through procedures for hopefully everyday work use the checklist #
-#      as reference which is by no means exhastive                            #
+#    - To go through procedures for everyday work use the checklist as        #
+#      reference which is by no means exhastive                               #
 #    - To change intended behavior or optimise  commands edit the zsh section #
+#                                                                             #
+# 7. Visual Studio Code optional integration                                  #
+#    - If you are using visual studio code, there is an optional associated   #
+#      file with debug configuration options and instructions in its comments #
+#      section                                                                #                                                                       #
+#    - Also, if you select vscode as the default editor below, difftool is    # 
+#      setup to open the diffs there as well for more visual aid on changes   #
 #                                                                             #
 ###############################################################################
 

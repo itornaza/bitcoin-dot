@@ -503,7 +503,7 @@ btest-unit-one() {
 }
 
 # Run util tests without recompiling
-# TODO: Does not find config.ini file
+# TODO: Fix not finding config.ini file
 alias btest-util="$BPATH_/test/util/test_runner.py"
 
 #----------------------------===<<< Lint checks >>>===------------------------#
@@ -551,7 +551,7 @@ alias btest-report-total="open -a /Applications/Firefox.app \
                          $BPATH_/total.coverage/index.html"
 
 # Test coverage
-# TODO: cannot make coverage work yet!
+# TODO: Redesign, it doesn't work
 bcov() {
     bconfigure-debug --enable-lcov
     bmake

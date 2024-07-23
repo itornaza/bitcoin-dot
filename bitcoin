@@ -562,7 +562,6 @@ bcov() {
 #-----------------------------===<<< Benchmark >>>===-------------------------#
 
 # Build benchmark support after configuring build with bconfigure-debug
-# https://github.com/bitcoin/bitcoin/blob/master/doc/benchmarking.md
 alias bbench-make="make -C src bitcoin_bench"
 
 # Run the benchmarks

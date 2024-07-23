@@ -559,6 +559,21 @@ bcov() {
     make cov
 }
 
+#-----------------------------===<<< Benchmark >>>===-------------------------#
+
+# Build benchmark support after configuring build with bconfigure-debug
+# https://github.com/bitcoin/bitcoin/blob/master/doc/benchmarking.md
+alias bbench-make="make -C src bitcoin_bench"
+
+# Run the benchmarks
+alias bbench="src/bench/bench_bitcoin"
+
+# Get help
+alias bbench-help="bbench -h"
+
+# List all benchmarks
+alias bbench-list="bbench -list"
+
 #----------------------===<<< Build and test combos  >>>===-------------------#
 
 # Build and run unit and functional tests from clean

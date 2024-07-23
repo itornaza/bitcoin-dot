@@ -82,6 +82,8 @@ The main sources for the compilation of this file comes straight from Bitcoin Co
 
 - [Productivity](https://github.com/bitcoin/bitcoin/blob/master/doc/productivity.md)
 
+- [Benchmark](https://github.com/bitcoin/bitcoin/blob/master/doc/benchmarking.md)
+
 and Jon Atack's blog: 
 
 - [How to compile Bitcoin Core and run the unit and functional tests](https://jonatack.github.io/articles/how-to-compile-bitcoin-core-and-run-the-tests)

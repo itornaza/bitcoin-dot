@@ -533,6 +533,7 @@ alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache \
 alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
 # Extended functional tests (optimum standalone configuration)
+# to exclude a specific test use ex `--exclude=feature_dbcrash` 
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
                 --extended && bdestroy-ram"
 

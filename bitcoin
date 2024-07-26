@@ -354,7 +354,8 @@ alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
 
 # File changes generic case 
 # % git difftool <commit-to-compare-with-current> <file>
-# % git difftool <commit1> <commit2> -- <file>
+# % git difftool <commit1> <commit2> -- <file> # Open this specific file only
+# % git difftool <commit1> <commit2> # Will open all changed files, one by one
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
 

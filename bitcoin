@@ -440,6 +440,9 @@ alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
                         --with-incompatible-bdb 
                         --enable-surpress-external-warnings --enable-debug"
 
+# TODO: Add and test a Thread Sanitizer build configuration extending debug
+# alias bconfigure-tsan="bconfigure-debug -sanitize=thread -02 -g"
+
 alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
                       --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 

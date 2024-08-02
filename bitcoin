@@ -604,7 +604,11 @@ alias bdox-clean="make clean-docs"
 alias bct-make="make clean && bear --config src/.bear-tidy-config -- \
                 make -j $NCORES_"
 
+# Run clang-tidy on src
 alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
+
+# Run clang-tidy with the cppcoreguidelines suport on a source file
+alias bct-cg="$BRCT_ -checks=cppcoreguidelines-" # <source-file>
 
 # Format last commit with 0 lines of context, call from the git root folder,
 # uses clang-format with the config defined in src/.clang-format

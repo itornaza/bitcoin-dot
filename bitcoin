@@ -30,6 +30,9 @@
 #    - Also, if you select vscode as the default editor below, difftool is    # 
 #      setup to open the diffs there as well for more visual aid on changes   #
 #                                                                             #
+# 7. To check what an alias does after sourcing the file, try:                #
+#    % alias | grep <alias-name>                                              #
+#                                                                             #
 ###############################################################################
 
 

@@ -246,9 +246,9 @@ alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
-alias bd="$BPATH_/src/bitcoind"
-alias bcli="$BPATH_/src/bitcoin-cli"
-alias bclin="$BPATH_/src/bitcoin-cli -named"
+alias bd="$BPATH_/build/src/bitcoind"
+alias bcli="$BPATH_/build/src/bitcoin-cli"
+alias bclin="$BPATH_/build/src/bitcoin-cli -named"
 
 # Kill bitcoind if forgotten to stop it properly
 alias bkill="pkill -9 bitcoind;"

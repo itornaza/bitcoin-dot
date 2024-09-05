@@ -462,9 +462,9 @@ alias bbuild="bconfigure && bmake"
 
 # CMake
 # https://github.com/bitcoin/bitcoin/blob/master/doc/build-osx.md
-alias bcmake="cmake -B build -DWITH_BDB=ON"
-alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON"
-alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF"
+alias bcmake="cmake -B build -DWITH_BDB=ON -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
+alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
+alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
 alias bcmake-options="cmake -B build -LH"
 
 alias bcbuild="cmake --build build -j $NCORES_"

@@ -53,7 +53,11 @@
             
             // Run a unit test by defining the module and test names in args
             "program": "${workspaceFolder}/src/test/test_bitcoin",
-            "args": ["--run_test=system_tests/run_command"],
+            
+            // Enter the test category and test case as in the following comment
+            //"args": ["--run_test=system_tests/run_command"],
+            "args": ["--run_test=sv2_noise_tests/certificate_test"],
+            
             "cwd": "${workspaceFolder}"
             "stopAtEntry": false,
             "externalConsole": true,

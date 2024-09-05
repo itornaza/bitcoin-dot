@@ -457,9 +457,6 @@ alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
-# Minimal build
-alias bbuild="bconfigure && bmake"
-
 # CMake
 # https://github.com/bitcoin/bitcoin/blob/master/doc/build-osx.md
 alias bcmake="cmake -B build -DWITH_BDB=ON -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
@@ -468,6 +465,10 @@ alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF -DCMAKE_C_COMPILER=$BC_ -
 alias bcmake-options="cmake -B build -LH"
 
 alias bcbuild="cmake --build build -j $NCORES_"
+
+# Minimal build
+# TODO Remove old build process: alias bbuild="bconfigure && bmake"
+alias bbuild="bcmake && bcbuild"
 
 #-----------------------------------------------------------------------------#
 #                                    TESTS                                    #

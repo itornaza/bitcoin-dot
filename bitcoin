@@ -179,7 +179,7 @@ export BPATH_="$BITDEV_/bitcoin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDOT_="$BITDEV_/btc-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
-export BFUNC_="$BTEST_/functional"
+export BFUNC_="$BPATH_/build/test/functional"
 export BTEST_LOGS_="/var/folders/qy/mc4396sn0ql8dpl5q852sng40000gn/T"
 export BDOX_="$BPATH_/doc/doxygen/html"
 
@@ -434,41 +434,57 @@ alias bc=$BC_
 alias bcpp=$BCPP_ 
 alias blldb=$BLLDB_
 
-# Configure
-alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
-                  --with-incompatible-bdb --enable-surpress-external-warnings"
+# CMake
+# https://github.com/bitcoin/bitcoin/blob/master/doc/build-osx.md
+# Note: Use `ccmake build/src/bitcoind` to check the cmake configuration
 
-alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_"
+# List all cmake build options
+alias bcmake-options="cmake -B build -LH"
 
-alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
-                        --with-incompatible-bdb 
-                        --enable-surpress-external-warnings --enable-debug"
+# Standard config
+alias bcmake="cmake -B build -DWITH_BDB=ON \
+             -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
 
-# TODO: Add and test a Thread Sanitizer build configuration extending debug
-# alias bconfigure-tsan="bconfigure-debug -sanitize=thread -02 -g"
+# Creates the debug symbols, use ccmake to confirm DCMAKE_BUILD_TYPE 
+# is set to Debug
+alias bcmake-debug="cmake -B build -DWITH_BDB=ON \
+                    -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_ \
+                    -DCMAKE_BUILD_TYPE=Debug"
 
-alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
-                      --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+# Creates the .app executable to move to the Applications folder
+alias bcmake-deploy="cmake -B build --target deploy -DWITH_BDB=ON \
+                    -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
 
-# Make
+alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON \
+                  -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
+
+alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF \
+                   -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
+
+# CMake builds
+alias bcbuild="cmake --build build -j $NCORES_"
+alias bcbuild-test="ctest --test-dir build -j $NCORES_"
+
+# CMake Build chain, combined
+alias bbuild="bcmake && bcbuild && bcbuild-test"
+
+# Make plain commands to be executed from within the build directory
 alias bdistclean="make distclean" # Includes make clean as well
 alias bclean="make clean"
 alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
-# CMake
-# https://github.com/bitcoin/bitcoin/blob/master/doc/build-osx.md
-alias bcmake="cmake -B build -DWITH_BDB=ON -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
-alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
-alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
-alias bcmake-options="cmake -B build -LH"
-
-alias bcbuild="cmake --build build -j $NCORES_"
-
-# Minimal build
-# TODO Remove old build process: alias bbuild="bconfigure && bmake"
-alias bbuild="bcmake && bcbuild"
+# DEPRECATED -- Configure commands used before transition to cmake
+alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+                  --with-incompatible-bdb --enable-surpress-external-warnings"
+alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_"
+alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+                        --with-incompatible-bdb 
+                        --enable-surpress-external-warnings --enable-debug"
+alias bconfigure-tsan="bconfigure-debug -sanitize=thread -02 -g"
+alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
+                      --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
 
 #-----------------------------------------------------------------------------#
 #                                    TESTS                                    #
@@ -511,7 +527,7 @@ alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 # Run the unit test without re-compiling
 btest-unit() {
     b
-    cd src/test/
+    cd build/src/test/
     test_bitcoin
     b
 }
@@ -520,12 +536,11 @@ btest-unit-one() {
     # $1: module (file name)
     # $2: test case
     b
-    ./src/test/test_bitcoin --run_test=$1/$2
+    ./build/src/test/test_bitcoin --run_test=$1/$2
 }
 
 # Run util tests without recompiling
-# TODO: Fix not finding config.ini file
-alias btest-util="$BPATH_/test/util/test_runner.py"
+alias btest-util="$BPATH_/build/test/util/test_runner.py"
 
 #----------------------------===<<< Lint checks >>>===------------------------#
 
@@ -597,14 +612,16 @@ alias bbench-list="bbench -list"
 
 #----------------------===<<< Build and test combos  >>>===-------------------#
 
+# TODO: Update for cmake builds
+
 # Build and run unit and functional tests from clean
-alias bb="bconfigure && bmake && bcheck && btest"
+alias bb="bbuild && btest"
 
 # Build and run unit and extended functional tests from clean
-alias bbe="bconfigure && bmake && bcheck && btest-ext"
+alias bbe="bbuild && btest-ext"
 
-# Build for debugging with unit tests only
-alias bbd="bconfigure-debug && bmake && bcheck"
+# Build for debugging with no tests involved
+alias bbd="bcmake-debug && bcbuild"
 
 #-----------------------------------------------------------------------------#
 #                       DOCUMENTATION AND CODING STYLE                        #

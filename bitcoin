@@ -86,15 +86,11 @@
 #                             BUILD AND TEST REFERENCE                        #
 #-----------------------------------------------------------------------------#
 
-# % bdistclean
-# % bclean
-# % bconfigure
-# % bmake
-# % bbuild
-# % bcheck
-# % btest
-# % btest-ext
-# % bclean-all
+# bbuild
+# bb
+# bbe
+# bbd
+# bnuke
 
 #-----------------------------------------------------------------------------#
 #                                   DEBUG CPP                                 #
@@ -468,6 +464,9 @@ alias bcbuild-test="ctest --test-dir build -j $NCORES_"
 # CMake Build chain, combined
 alias bbuild="bcmake && bcbuild && bcbuild-test"
 
+# Nuke the build directory to start from scratch
+alias bnuke="rm -fr $BPATH_/build"
+
 # Make plain commands to be executed from within the build directory
 alias bdistclean="make distclean" # Includes make clean as well
 alias bclean="make clean"
@@ -614,6 +613,9 @@ alias bbench-list="bbench -list"
 
 # TODO: Update for cmake builds
 
+# Built and unit tests
+# % bbuild
+
 # Build and run unit and functional tests from clean
 alias bb="bbuild && btest"
 
@@ -655,3 +657,6 @@ alias bdox="open -a /Applications/Firefox.app $BDOX_/index.html"
 
 # Clean up everything in the build and test chains in case of trouble
 alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
+
+# Wipe out the entire build with
+# % bnuke

@@ -31,7 +31,7 @@
             "request": "launch",
 
             // Run bicoind with bitcoin.conf settings and no extra arguments
-            "program": "${workspaceFolder}/src/bitcoind",
+            "program": "${workspaceFolder}/build/src/bitcoind",
             "args": [],
             
             "cwd": "${workspaceFolder}"
@@ -52,7 +52,7 @@
             "request": "launch",
             
             // Run a unit test by defining the module and test names in args
-            "program": "${workspaceFolder}/src/test/test_bitcoin",
+            "program": "${workspaceFolder}/build/src/test/test_bitcoin",
             
             // Enter the test category and test case as in the following comment
             //"args": ["--run_test=system_tests/run_command"],
@@ -92,7 +92,7 @@
             "name": "Attach bitcoind to functional test",
             "type": "lldb",
             "request": "attach",
-            "program": "${workspaceFolder}/src/bitcoind",
+            "program": "${workspaceFolder}/build/src/bitcoind",
             "processId": "${command:pickProcess}",
             "MIMode": "lldb",
             "cwd": "${workspaceFolder}"

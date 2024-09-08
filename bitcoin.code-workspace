@@ -56,7 +56,7 @@
             
             // Enter the test category and test case as in the following comment
             //"args": ["--run_test=system_tests/run_command"],
-            "args": ["--run_test=sv2_noise_tests/certificate_test"],
+            "args": ["--run_test=net_tests/cnetaddr_serialize_v1"],
             
             "cwd": "${workspaceFolder}"
             "stopAtEntry": false,
@@ -74,7 +74,7 @@
             "name": "Debug functional test",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/test/functional/feature_taproot.py",
+            "program": "${workspaceFolder}/build/test/functional/feature_taproot.py",
             "console": "integratedTerminal"
         },
         {

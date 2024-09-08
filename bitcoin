@@ -398,6 +398,9 @@ bg-logp-r() {
 
 #-----------------------------===<<< Git rebase >>>===------------------------#
 
+# https://github.com/satsie/bitcoin-notez/blob/master/bitcoin-core-development/git-guide.md
+# https://github.com/tdb3/toolbox/blob/main/git/rebaseExample.md
+
 # Display all the commits including the master's if on a branch
 alias bg-oneline="git log --oneline "
 
@@ -407,19 +410,22 @@ alias bg-commits="bg-oneline $BGMASTER_.."
 # Display the number of commits of the branch since the fork from master
 alias bg-commits-n="bg-commits | wc -l"
 
-# Open interactive rebase to edit a given last number of commits
-# Switch `pick` to `reword` or `squash` during the session
+# 1. Open interactive rebase to edit a given last number of commits
+# Note: In case of a one commit pr, use `git rebase -i HEAD~ instead` 
 bg-rebase-i() {
     # $1: Number of last commits
     git rebase -i HEAD~$1
 }
 
-# Continue editing the next commit within the interactive rebase process
+# 2. Select `pick` for `squash` or `edit` to modify the commit contents
+# Open the files you want to change with an editor
+
+# 3. Continue editing the next commit within the interactive rebase process
 alias bg-continue="git rebase --continue"
 
-# Force push changes from rebase 
+# 4. Force push changes from rebase 
 # ** Caution! ** is irreversible
-alias bg-force="git push -f" 
+alias bg-force="git push -f" # origin <branch-name> 
 
 #-----------------------------------------------------------------------------#
 #                                    BUILD                                    #
@@ -432,7 +438,7 @@ alias blldb=$BLLDB_
 
 # CMake
 # https://github.com/bitcoin/bitcoin/blob/master/doc/build-osx.md
-# Note: Use `ccmake build/src/bitcoind` to check the cmake configuration
+# Note: Use `ccmake build` to check the cmake configuration
 
 # List all cmake build options
 alias bcmake-options="cmake -B build -LH"
@@ -441,8 +447,7 @@ alias bcmake-options="cmake -B build -LH"
 alias bcmake="cmake -B build -DWITH_BDB=ON \
              -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
 
-# Creates the debug symbols, use ccmake to confirm DCMAKE_BUILD_TYPE 
-# is set to Debug
+# Debug symbols, use ccmake to confirm DCMAKE_BUILD_TYPE is set to Debug
 alias bcmake-debug="cmake -B build -DWITH_BDB=ON \
                     -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_ \
                     -DCMAKE_BUILD_TYPE=Debug"
@@ -451,11 +456,18 @@ alias bcmake-debug="cmake -B build -DWITH_BDB=ON \
 alias bcmake-deploy="cmake -B build --target deploy -DWITH_BDB=ON \
                     -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
 
+# With gui
 alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON \
                   -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
 
-alias bcmake-nogui="cmake -B build -DENABLE_WALLET=OFF \
-                   -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
+# Without wallet
+alias bcmake-nowallet="cmake -B build -DENABLE_WALLET=OFF \
+                      -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
+
+# Clang-tidy
+alias bcmake-ct="cmake -B build \
+                  -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_ \ 
+                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 
 # CMake builds
 alias bcbuild="cmake --build build -j $NCORES_"
@@ -519,6 +531,28 @@ alias bdata-erase-regtest="rm -fr $BDATA_/regtest/*"
 # Clean up test environment
 alias btest-clean="rm -rf $BTEST_/cache; pkill -9 bitcoind;"
 
+#-------------------------===<<< Functional tests >>>===----------------------#
+
+# Functional tests
+alias btest-plain="$BFUNC_/test_runner.py"
+
+# Attach ramdisk support to functional tests
+# Note: Have to manually create and destroy the ramdisk
+alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache \
+                --tmpdir=/Volumes/ramdisk/tmp"
+
+# Functional tests (optimum standalone configuration)
+alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
+
+# Extended functional tests (optimum standalone configuration)
+# to exclude a specific test use ex `--exclude=feature_dbcrash` 
+alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
+                --extended && bdestroy-ram"
+
+# Coverage for the exteded functional tests to uncover missing rpcs from harness
+alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
+                --coverage && bdestroy-ram"
+
 #----------------------------===<<< Unit tests >>>===-------------------------#
 
 # bmake (i.e. make check) above runs both the unit and util tests
@@ -550,27 +584,16 @@ btest-lint() {
     b
 }
 
-#-------------------------===<<< Functional tests >>>===----------------------#
+#---------------------------===<<< Clang tidy  >>>===-------------------------#
 
-# Functional tests
-alias btest-plain="$BFUNC_/test_runner.py"
+# Build specifically for clang tidy
+alias bct-build="bcmake-ct && bcbuild"
 
-# Attach ramdisk support to functional tests
-# Note: Have to manually create and destroy the ramdisk
-alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache \
-                --tmpdir=/Volumes/ramdisk/tmp"
+# Run clang-tidy on src
+alias bct="( cd ./src/ && $BRCT_ -p ../build -j $NCORES_ )"
 
-# Functional tests (optimum standalone configuration)
-alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
-
-# Extended functional tests (optimum standalone configuration)
-# to exclude a specific test use ex `--exclude=feature_dbcrash` 
-alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
-                --extended && bdestroy-ram"
-
-# Coverage for the exteded functional tests to uncover missing rpcs from harness
-alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
-                --coverage && bdestroy-ram"
+# Run clang-tidy with the cppcoreguidelines suport on a source file
+alias bct-cg="$BRCT_ -p ../build -checks=cppcoreguidelines-" # <source-file>
 
 #----------------------------===<<< Fuzz tests >>>===-------------------------#
 
@@ -611,8 +634,6 @@ alias bbench-list="bbench -list"
 
 #----------------------===<<< Build and test combos  >>>===-------------------#
 
-# TODO: Update for cmake builds
-
 # Built and unit tests
 # % bbuild
 
@@ -632,16 +653,6 @@ alias bbd="bcmake-debug && bcbuild"
 # Doxygen (run from the project root)
 alias bdox-make="make docs"
 alias bdox-clean="make clean-docs"
-
-# Denoise of errors from external dependencies with bear and clang-tidy
-alias bct-make="make clean && bear --config src/.bear-tidy-config -- \
-                make -j $NCORES_"
-
-# Run clang-tidy on src
-alias bct="cd ./src/ && $BRCT_  -j $NCORES_"
-
-# Run clang-tidy with the cppcoreguidelines suport on a source file
-alias bct-cg="$BRCT_ -checks=cppcoreguidelines-" # <source-file>
 
 # Format last commit with 0 lines of context, call from the git root folder,
 # uses clang-format with the config defined in src/.clang-format

@@ -671,3 +671,17 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 
 # Wipe out the entire build with
 # % bnuke
+
+#-----------------------------------------------------------------------------#
+#                               BONUS - WARNET                                #
+#-----------------------------------------------------------------------------#
+
+alias warnet-run() {
+    bitdev
+    cd warnet
+    python3.12 -m venv .venv
+    source .venv/bin/activate
+    pip3.12 install -e .
+    warnet setup
+    warnet init
+}

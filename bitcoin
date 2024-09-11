@@ -679,9 +679,26 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 alias warnet-run() {
     bitdev
     cd warnet
-    python3.12 -m venv .venv
-    source .venv/bin/activate
-    pip3.12 install -e .
+    python3.12 -m venv .venv && source .venv/bin/activate && pip3.12 install -e .
+    open /Applications/Docker.app
+    kubectl config set-context --current --namespace=warnet
     warnet setup
-    warnet init
+    test/rpc_test.py
 }
+
+# Usefull commands
+
+# Run a simulation
+# % warnet deploy <path-to-network>
+
+# Get a dashboard on `localhost:2323`
+# % kubectl port-forward fork-observer 2323
+
+# Check the kuberbetes pods
+# % k9s
+
+# warnet --help
+# warnet logs
+# warnet deploy test/data/bitcoin_conf
+# warnet run resources/scenario/invdos.py
+# warnet bitcoin rpc tank-0016 getpeerinfo

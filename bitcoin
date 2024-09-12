@@ -163,7 +163,8 @@ export NJOBS_64_=64
 # RAM disc to be used with normal functional tests
 # Size calc: { 4096 MiB * 2048 blocks/MiB = 8388608 blocks for 4 GiB }
 # Size calc: { 8192 MiB * 2048 blocks/MiB = 16777216 blocks for 8 GiB}
-export RAMDISK_SIZE_=16777216
+# Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
+export RAMDISK_SIZE_=25165824
 
 # RAM disc to be used with normal extended functional tests
 # Size calc: { 12288 MiB * 2048 blocks/MiB = 25165824 blocks for 12 GiB }
@@ -545,8 +546,11 @@ alias btest-ram="btest-plain --cachedir=/Volumes/ramdisk/cache \
 # Functional tests (optimum standalone configuration)
 alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 
+# Extended functional tests excluding db_crash
+alias btest-ext-db="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
+                --exclude=feature_dbcrash.py && bdestroy-ram"
+
 # Extended functional tests (optimum standalone configuration)
-# to exclude a specific test use ex `--exclude=feature_dbcrash` 
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
                 --extended && bdestroy-ram"
 

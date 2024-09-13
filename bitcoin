@@ -404,6 +404,8 @@ bg-logp-r() {
 # https://github.com/tdb3/toolbox/blob/main/git/rebaseExample.md
 
 # Display all the commits including the master's if on a branch
+# Can specify how many commits back with:
+# % git log -n <number-of-commits> --oneline
 alias bg-oneline="git log --oneline "
 
 # Display all commits of the branch since the fork from master
@@ -549,6 +551,8 @@ alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 # Extended functional tests excluding db_crash
 alias btest-ext-db="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
                 --exclude=feature_dbcrash.py && bdestroy-ram"
+# and then run db_crash only with
+# % btest-plain feature_dbcrash.py
 
 # Extended functional tests (optimum standalone configuration)
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \
@@ -681,7 +685,7 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 #                               BONUS - WARNET                                #
 #-----------------------------------------------------------------------------#
 
-alias warnet-run() {
+warnet-run() {
     bitdev
     cd warnet
     python3.12 -m venv .venv && source .venv/bin/activate && pip3.12 install -e .

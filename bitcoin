@@ -421,10 +421,12 @@ bg-rebase-i() {
     git rebase -i HEAD~$1
 }
 
-# 2. Select `pick` for `squash` or `edit` to modify the commit contents
-# Open the files you want to change with an editor
+# 2. Select `pick`, `squash` or `edit` to modify the commit contents
+#    save and close, follow the terminal instructions
 
-# 3. Continue editing the next commit within the interactive rebase process
+# 3. Open the files you want to change with an editor
+
+# 4. Continue editing the next commit within the interactive rebase process
 alias bg-continue="git rebase --continue"
 
 # 4. Force push changes from rebase 
@@ -552,7 +554,7 @@ alias btest="bcreate-ram && btest-ram --jobs=$NJOBS_64_ && bdestroy-ram"
 alias btest-ext-db="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
                 --exclude=feature_dbcrash.py && bdestroy-ram"
 # and then run db_crash only with
-# % btest-plain feature_dbcrash.py
+alias btest-db-only="btest-plain feature_dbcrash.py"
 
 # Extended functional tests (optimum standalone configuration)
 alias btest-ext="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ \

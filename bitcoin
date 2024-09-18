@@ -86,11 +86,14 @@
 #                             BUILD AND TEST REFERENCE                        #
 #-----------------------------------------------------------------------------#
 
-# bbuild
-# bb
-# bbe
-# bbd
-# bnuke
+# bcmake-<options>
+# bcbuild       # just build without tests
+# bcbuild-test  # tests only
+# bbuild        # build and test together
+# bb            # build and functional tests
+# bbe           # build and extended tests
+# bbd           # build for debug
+# bnuke         # Wipe out all build data
 
 #-----------------------------------------------------------------------------#
 #                                   DEBUG CPP                                 #

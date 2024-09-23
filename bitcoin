@@ -512,12 +512,17 @@ alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
 
 #---------------------------===<<< Test support >>>===------------------------#
 
-# RAM disk to speed up or constraint testing environment size
-alias bcreate-ram="diskutil erasevolume HFS+ ramdisk \
-                  $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)"
+# RAM disks to speed up or constraint testing environment size
+# Note: If defined as normal aliases, disk images are implicitly created
+bcreate-ram() {
+    diskutil erasevolume HFS+ ramdisk \
+    $(hdiutil attach -nomount ram://$RAMDISK_SIZE_)
+}
 
-alias bcreate-ram-ext="diskutil erasevolume HFS+ ramdisk \
-                       $(hdiutil attach -nomount ram://$RAMDISK_SIZE_EXT_)"
+bcreate-ram-ext() {
+    diskutil erasevolume HFS+ ramdisk \
+    $(hdiutil attach -nomount ram://$RAMDISK_SIZE_EXT_)
+}
 
 alias bdestroy-ram="umount /Volumes/ramdisk"
 
@@ -611,7 +616,7 @@ alias bct-cg="$BRCT_ -p ../build -checks=cppcoreguidelines-" # <source-file>
 
 #----------------------------===<<< Fuzz tests >>>===-------------------------#
 
-# TODO
+# TODO: Fuzz tests
 
 #---------------------------===<<< Test reports >>>===------------------------#
 
@@ -623,14 +628,7 @@ alias btest-report="open -a /Applications/Firefox.app \
 alias btest-report-total="open -a /Applications/Firefox.app \
                          $BPATH_/total.coverage/index.html"
 
-# Test coverage
-# TODO: Redesign, it doesn't work
-bcov() {
-    bconfigure-debug --enable-lcov
-    bmake
-    make check
-    make cov
-}
+# TODO: Test coverage
 
 #-----------------------------===<<< Benchmark >>>===-------------------------#
 

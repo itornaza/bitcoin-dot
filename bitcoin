@@ -338,6 +338,11 @@ bgd-files() {
     fi
 }
 
+# Open the changed files with vs code
+bgd-files-open() {
+    code $(bgd-files $1)
+}
+
 # List of files  differences  between two commits
 alias bgd-commits=" git diff --name-only " # <commit-1> <commit-2>
 

@@ -408,6 +408,17 @@ bg-logp-r() {
 
 #-----------------------------===<<< Git rebase >>>===------------------------#
 
+# Rebase a local branch
+
+# % bg-update
+# git checkout <branch>
+# git rebase upstream/master
+# git add <file-with-conflict>
+# git rebase --continue
+# git push origin <branch> --force
+
+# Rebase an existing pr
+
 # https://github.com/satsie/bitcoin-notez/blob/master/bitcoin-core-development/git-guide.md
 # https://github.com/tdb3/toolbox/blob/main/git/rebaseExample.md
 

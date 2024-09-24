@@ -98,6 +98,6 @@ On debugging with Visual Studio code or not:
 
 - [Debugging Bitcoin Core](https://github.com/fjahr/debugging_bitcoin)
 
-## Lisence
+## License
 
 [Bitcoin dot](#bitcoin-dot) is released under the terms of the [MIT license](https://opensource.org/licenses/MIT)

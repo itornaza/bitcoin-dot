@@ -340,6 +340,7 @@ bgd-files() {
 
 # Open the changed files with vs code
 bgd-files-open() {
+    # $1: Number of commits backwards
     code $(bgd-files $1)
 }
 
@@ -366,6 +367,9 @@ alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
 # % git difftool <commit-to-compare-with-current> <file>
 # % git difftool <commit1> <commit2> -- <file> # Open this specific file only
 # % git difftool <commit1> <commit2> # Will open all changed files, one by one
+
+# Examine differences in code that have been moved elsewhere
+# % git diff --color-moved=dimmed-zebra
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
 

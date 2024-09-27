@@ -148,6 +148,14 @@
 # clang-tidy is now also dscoverable by bear
 export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
+# TOOD: Remove after LLVM tools needed to compile depends are included in th
+# `depends/Makefile`
+# export RANLIB=llvm-ranlib
+# export STRIP=llvm-strip
+# export NM=llvm-nm
+# export OBJDUMP=llvm-objdump
+# export DSYMUTIL=dsymutil
+
 # System tools
 export ED_=code # or vim
 export BC_=/opt/homebrew/opt/llvm/bin/clang

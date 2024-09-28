@@ -277,7 +277,7 @@ alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
-alias bd="$BPATH_/build/src/bitcoind"
+alias bd="$BPATH_/build/src/bitcoind" # TODO append data dir command to storage
 alias bdqt="$BPATH_/build/src/qt/bitcoin-qt"
 alias bcli="$BPATH_/build/src/bitcoin-cli"
 alias bclin="$BPATH_/build/src/bitcoin-cli -named"

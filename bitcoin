@@ -83,6 +83,28 @@
 # % git difftool <last-reviewed-commit> <new-commit> -- <file>
 
 #-----------------------------------------------------------------------------#
+#                                   CREATE PR                                 #
+#-----------------------------------------------------------------------------#
+
+# (0) Create a local branch 
+# % git branch <new-branch-name>
+
+# (1) Update from upstream
+# % git fetch upstream
+
+# (2) Rebase on upstream to get all recent changes
+# % git rebase upstream/master
+
+# (3) Push to fork
+# % git push --force origin <new-branch-name>
+
+# (4) Open a PR from Github (Caution: Select the correct branch!)
+
+# (5) Write a meaningful description
+
+# (6) Add reviewers
+
+#-----------------------------------------------------------------------------#
 #                             BUILD AND TEST REFERENCE                        #
 #-----------------------------------------------------------------------------#
 
@@ -489,10 +511,6 @@ alias bcmake-debug="cmake -B build -DWITH_BDB=ON \
                     -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_ \
                     -DCMAKE_BUILD_TYPE=Debug"
 
-# Creates the .app executable to move to the Applications folder
-alias bcmake-deploy="cmake -B build --target deploy -DWITH_BDB=ON \
-                    -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP_"
-
 # With gui
 alias bcmake-gui= "cmake -B build -DBUILD_GUI=ON \
                   -DCMAKE_C_COMPILER=$BC_ -DCMAKE_CXX_COMPILER=$BCPP"
@@ -508,6 +526,10 @@ alias bcmake-ct="cmake -B build \
 
 # CMake builds
 alias bcbuild="cmake --build build -j $NCORES_"
+
+# Creates the .app executable to move to the Applications folder
+alias bcbuild-deploy="cmake --build build --target deploy"
+
 alias bcbuild-test="ctest --test-dir build -j $NCORES_"
 
 # CMake Build chain, combined

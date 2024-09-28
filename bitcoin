@@ -526,13 +526,9 @@ alias bcmake-ct="cmake -B build \
 
 # CMake builds
 alias bcbuild="cmake --build build -j $NCORES_"
-
-# Creates the .app executable to move to the Applications folder
-alias bcbuild-deploy="cmake --build build --target deploy"
-
 alias bcbuild-test="ctest --test-dir build -j $NCORES_"
 
-# CMake Build chain, combined
+# Build complete toolchain
 alias bbuild="bcmake && bcbuild && bcbuild-test"
 
 # Nuke the build directory to start from scratch

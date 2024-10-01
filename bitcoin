@@ -40,7 +40,6 @@
 #                                  CHECKLISTS                                 #
 #//////////////////////////////////////////////////////////////////////////////
 
-
 #-----------------------------------------------------------------------------#
 #                                   SET UP                                    #
 #-----------------------------------------------------------------------------#
@@ -62,19 +61,25 @@
 # % git checkout <commit>
 
 #-----------------------------------------------------------------------------#
+#                             BUILD AND TEST REFERENCE                        #
+#-----------------------------------------------------------------------------#
+
+# bcmake-<options>
+# bcbuild       # just build without tests
+# bcbuild-test  # tests only
+# bbuild        # build and test together
+# bb            # build and functional tests
+# bbe           # build and extended tests
+# bbd           # build for debug
+# bnuke         # Wipe out all build data
+
+#-----------------------------------------------------------------------------#
 #                                   PR REVIEWS                                #
 #-----------------------------------------------------------------------------#
 
 # (0) Run the set up checklist first
 
-# (1) Build and run unit and functional tests from clean
-# % bb
-
-# - To independently run the extended tests afterwards use
-# % btest-ext
-
-# (2) Build and run unit and extended functional tests from clean
-# % bbe
+# (1) Build and run the tests, look at the <build and test reference> section
 
 # (3) Locate how many commits the pr have until the last merge
 # % bg-oneline
@@ -128,25 +133,12 @@
 #-----------------------------------------------------------------------------#
 
 # Note: Rebase just for the ci with no changes in the code
-# If you have changes see the <git rebase section>
+# If you have changes see the <git rebase> section
 
 # % bg-update
-# % git checkout <branch>
+# % git checkout <branch-name>
 # % git rebase upstream/master
-# % git push origin <branch> --force
-
-#-----------------------------------------------------------------------------#
-#                             BUILD AND TEST REFERENCE                        #
-#-----------------------------------------------------------------------------#
-
-# bcmake-<options>
-# bcbuild       # just build without tests
-# bcbuild-test  # tests only
-# bbuild        # build and test together
-# bb            # build and functional tests
-# bbe           # build and extended tests
-# bbd           # build for debug
-# bnuke         # Wipe out all build data
+# % git push origin <branch-name> --force
 
 #-----------------------------------------------------------------------------#
 #                                   DEBUG CPP                                 #
@@ -154,7 +146,7 @@
 
 # (0) Set up checklist first
 
-# (1) Build for debugging (btest and btest-ext for functional if needed)
+# (1) Build for debugging
 # % bbd
 
 # (2) Open workspace on vscode depending on what to debug and follow the 

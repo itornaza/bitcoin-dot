@@ -65,39 +65,41 @@
 #                                   PR REVIEWS                                #
 #-----------------------------------------------------------------------------#
 
-# Run the set up checklist first
+# (0) Run the set up checklist first
 
-# Build and run unit and functional tests from clean
+# (1) Build and run unit and functional tests from clean
 # % bb
 
-# To independently run the extended tests afterwards use
+# - To independently run the extended tests afterwards use
 # % btest-ext
 
-# Build and run unit and extended functional tests from clean
+# (2) Build and run unit and extended functional tests from clean
 # % bbe
 
-# Get the changed file names
+# (3) Locate how many commits the pr have until the last merge
+# % bg-oneline
+
+# (4) Get the changed file names
 # % bgd-files <number-of-commits-backwards> # or
 # % git diff --name-only <last-reviewed-commit> <new-commit>
 
-# Note: The HEAD is set to the commit we checked out. In order to get the 
-# changed files that this PR touched upon, we may run a git log to find the 
-# nearest merge commit to test against
+# (5) Examine differences
 
-# Open all the changed files witout the diff info
-# % bgd-files-open <number-of-commits-backwards>
+# - In a re-review check the differences since the last review using
+# % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
 
-# Examine the changes in each file, will launch on the prefered editor
-# % git difftool <last-reviewed-commit> <new-commit> -- <file>
-
-# Note: If the `-- <file>` is left over, it will go to all of them sequentially
-
-# In a re-review check the differences since the last review using
-# bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
-
-# Can go through each commit from old to new to examine the individual changes
+# - Go through each commit from old to new to examine the individual changes
 # each one interoduced. Just check how many commits the pr includes
 # % git show HEAD~<number-of-commit-back>
+
+# - Examine the changes in each file, will launch on the prefered editor
+# can use the HEAD~ for a shortcut to the commit hases as well
+# % git difftool <last-reviewed-commit> <new-commit> -- <file>
+
+# - Note: If the `-- <file>` is left over, it will go to all of them sequentially
+
+# - Open all the changed files witout the diff info
+# % bgd-files-open <number-of-commits-backwards>
 
 #-----------------------------------------------------------------------------#
 #                                   CREATE PR                                 #
@@ -120,6 +122,18 @@
 # (5) Write a meaningful description
 
 # (6) Add reviewers as cc @<nym>
+
+#-----------------------------------------------------------------------------#
+#                                   REBASE PR                                 #
+#-----------------------------------------------------------------------------#
+
+# Note: Rebase just for the ci with no changes in the code
+# If you have changes see the <git rebase section>
+
+# % bg-update
+# % git checkout <branch>
+# % git rebase upstream/master
+# % git push origin <branch> --force
 
 #-----------------------------------------------------------------------------#
 #                             BUILD AND TEST REFERENCE                        #
@@ -401,7 +415,7 @@ bgd-files-open() {
 # List of files  differences  between two commits
 alias bgd-commits=" git diff --name-only " # <commit-1> <commit-2>
 
-# List of files  differences between this branch and the upstream
+# List of files differences between this branch and the upstream
 alias bgd-files-upstream="git diff --name-only upstream/$BGMASTER_ HEAD"
 
 # Differences between ranges of commits to use after rebasing. Use it to
@@ -424,9 +438,21 @@ alias bgd-tool="git difftool upstream/$BGMASTER_ " # <file>
 # % git difftool <commit1> <commit2> # Will open all changed files, one by one
 
 # Examine differences in code that have been moved elsewhere
-# % git diff --color-moved=dimmed-zebra
+# % git diff --color-moved=dimmed-zebra <commit-1> <commit-2>
 
 #--------------------------===<<< Git archaeology >>>===----------------------#
+
+# Display all the commits including the master's if on a branch
+alias bg-oneline="git log --oneline "
+
+# Can specify how many commits back with:
+# % git log -n <number-of-commits> --oneline
+
+# Display all commits of the branch since the fork from master
+alias bg-commits="bg-oneline $BGMASTER_.."
+
+# Display the number of commits of the branch since the fork from master
+alias bg-commits-n="bg-commits | wc -l"
 
 # Get the commit which changed last a line in a file
 bg-blame() {
@@ -456,8 +482,9 @@ bg-log-l() {
 alias bg-log-follow="git log --follow " # <path>
 
 # See the history of a removed file
-alias bg-log-removed="git log -- "
+alias bg-log-removed="git log -- " # <path>
 
+# TODO: Remove?
 # Get the PR discussion from a commit hash
 bg-logp-r() {
     # $1: commit hash
@@ -468,29 +495,6 @@ bg-logp-r() {
 #-----------------------------===<<< Git rebase >>>===------------------------#
 
 # Rebase a local branch
-
-# % bg-update
-# git checkout <branch>
-# git rebase upstream/master
-# git add <file-with-conflict>
-# git rebase --continue
-# git push origin <branch> --force
-
-# Rebase an existing pr
-
-# https://github.com/satsie/bitcoin-notez/blob/master/bitcoin-core-development/git-guide.md
-# https://github.com/tdb3/toolbox/blob/main/git/rebaseExample.md
-
-# Display all the commits including the master's if on a branch
-# Can specify how many commits back with:
-# % git log -n <number-of-commits> --oneline
-alias bg-oneline="git log --oneline "
-
-# Display all commits of the branch since the fork from master
-alias bg-commits="bg-oneline $BGMASTER_.."
-
-# Display the number of commits of the branch since the fork from master
-alias bg-commits-n="bg-commits | wc -l"
 
 # 1. Open interactive rebase to edit a given last number of commits
 # Note: In case of a one commit pr, use `git rebase -i HEAD~ instead` 
@@ -504,12 +508,15 @@ bg-rebase-i() {
 
 # 3. Open the files you want to change with an editor
 
-# 4. Continue editing the next commit within the interactive rebase process
+# 4. Add the file if it had a conflict i.e. change
+# % git add <file-with-conflict>
+
+# 5. Continue editing the next commit within the interactive rebase process
 alias bg-continue="git rebase --continue"
 
-# 4. Force push changes from rebase 
+# 6. Force push changes from rebase 
 # ** Caution! ** is irreversible
-alias bg-force="git push -f" # origin <branch-name> 
+alias bg-force="git push --force " # origin <branch-name> 
 
 #-----------------------------------------------------------------------------#
 #                                    BUILD                                    #

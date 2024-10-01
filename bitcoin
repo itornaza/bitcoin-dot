@@ -45,6 +45,9 @@
 #                                   SET UP                                    #
 #-----------------------------------------------------------------------------#
 
+# Can use `gh pr list` and `gh pr view <pr-number>` to get info on the terminal
+# instead of Github
+
 # (1) Get all updates from upstream, this leaves us to the master branch 
 # % bg-update
 
@@ -62,25 +65,39 @@
 #                                   PR REVIEWS                                #
 #-----------------------------------------------------------------------------#
 
-# (0) Set up checklist
+# Run the set up checklist first
 
-# (1a) Build and run unit and functional tests from clean
+# Build and run unit and functional tests from clean
 # % bb
+
 # To independently run the extended tests afterwards use
 # % btest-ext
 
-# (1b) Build and run unit and extended functional tests from clean
+# Build and run unit and extended functional tests from clean
 # % bbe
 
-# (2) Get the changed files with
-#     Note: The HEAD is set to the commit we checked out. In order to get the 
-#     changed files that this PR touched upon, we may run a git log to find the
-#     nearest merge commit to test against 
+# Get the changed file names
 # % bgd-files <number-of-commits-backwards> # or
 # % git diff --name-only <last-reviewed-commit> <new-commit>
 
-# (3) Examine the changes in each file, will launch on the prefered editor
+# Note: The HEAD is set to the commit we checked out. In order to get the 
+# changed files that this PR touched upon, we may run a git log to find the 
+# nearest merge commit to test against
+
+# Open all the changed files witout the diff info
+# % bgd-files-open <number-of-commits-backwards>
+
+# Examine the changes in each file, will launch on the prefered editor
 # % git difftool <last-reviewed-commit> <new-commit> -- <file>
+
+# Note: If the `-- <file>` is left over, it will go to all of them sequentially
+
+# In a re-review check the differences since the last review using
+# bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
+
+# Can go through each commit from old to new to examine the individual changes
+# each one interoduced. Just check how many commits the pr includes
+# % git show HEAD~<number-of-commit-back>
 
 #-----------------------------------------------------------------------------#
 #                                   CREATE PR                                 #
@@ -102,7 +119,7 @@
 
 # (5) Write a meaningful description
 
-# (6) Add reviewers
+# (6) Add reviewers as cc @<nym>
 
 #-----------------------------------------------------------------------------#
 #                             BUILD AND TEST REFERENCE                        #
@@ -121,7 +138,7 @@
 #                                   DEBUG CPP                                 #
 #-----------------------------------------------------------------------------#
 
-# (0) Set up checklist
+# (0) Set up checklist first
 
 # (1) Build for debugging (btest and btest-ext for functional if needed)
 # % bbd
@@ -136,7 +153,7 @@
 #                               DEBUG PY --> CPP                              #
 #-----------------------------------------------------------------------------#
 
-# (0) Set up checklist
+# (0) Set up checklist first
 
 # (1) Build for debugging (btest and btest-ext for functional if needed)
 # % bbd
@@ -290,6 +307,9 @@ alias bkill="pkill -9 bitcoind;"
 #                           (bg and BG - prefixes)                            #
 #-----------------------------------------------------------------------------#
 
+# TODO: Move as much from this section to .gitcongig link it to a gitconfig
+# file in this project
+
 #---------------------------===<<< Git configuration >>>===-------------------#
 
 # Git difftool and mergetool default editor set up to vs code (default is vim)
@@ -304,6 +324,10 @@ bg-ed-setup() {
 alias bg-ed="git config --global -e"
 
 #-----------------------------===<<< Git basic >>>===-------------------------#
+
+# Show information and changes of this commit
+# % git status
+# % git show
 
 # Name of the current branch
 alias bg-name="git branch --show-current"
@@ -380,7 +404,8 @@ alias bgd-commits=" git diff --name-only " # <commit-1> <commit-2>
 # List of files  differences between this branch and the upstream
 alias bgd-files-upstream="git diff --name-only upstream/$BGMASTER_ HEAD"
 
-# Differences between ranges of commits to use after rebasing
+# Differences between ranges of commits to use after rebasing. Use it to
+# compare changes between rebases of a pr
 bgd-range() {
     # $1: commit-1
     # $2: commit-2

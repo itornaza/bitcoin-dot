@@ -13,15 +13,15 @@
 # 2. To include it in your shell write the following line in ~/.zshrc         #
 #    `source <path-to-this-file>`                                             #
 #                                                                             #
-# 3. All git operations assume you are working from a fork of bitcoin         #
+# 3. All git operations assume you are working from your fork of bitcoin      #
 #                                                                             #
 # 4. Read all `Caution!` tags in the file before first use of this file       #
 #    or just live with the consequences!                                      #
 #                                                                             #
 # 5. The file has two sections, checklists and zsh                            #
-#    - To go through procedures for everyday work use the checklist as        #
-#      reference which is by no means exhastive                               #
-#    - To change intended behavior or optimise  commands edit the zsh section #
+#    - To go through procedures for everyday work use the checklists below as #
+#      a reference which is by no means exhastive                             #
+#    - To change intended behavior or optimise commands edit the zsh section  #
 #                                                                             #
 # 6. Visual Studio Code optional integration                                  #
 #    - If you are using visual studio code, there is an optional associated   #
@@ -36,148 +36,178 @@
 ###############################################################################
 
 
+
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 #                                  CHECKLISTS                                 #
 #//////////////////////////////////////////////////////////////////////////////
 
+bhelp() {
+    echo """
 #-----------------------------------------------------------------------------#
-#                                   SET UP                                    #
-#-----------------------------------------------------------------------------#
-
-# Can use `gh pr list` and `gh pr view <pr-number>` to get info on the terminal
-# instead of Github
-
-# (1) Get all updates from upstream, this leaves us to the master branch 
-# % bg-update
-
-# (2) Get the PR to review from upstream
-# % bg-getpr <pr-number>
-
-# (3) Checkout the pr to review with `git checkout pr/<number>`
-#     Note: We need to locate the last commit from GitHub
-# % bg-pr <pr-number> 
-
-# (4) Checkout the commit to test
-# % git checkout <commit>
-
-#-----------------------------------------------------------------------------#
-#                             BUILD AND TEST REFERENCE                        #
+#                       UPDATE, BUILD AND TEST REFERENCE                      #
 #-----------------------------------------------------------------------------#
 
-# bcmake-<options>
-# bcbuild       # just build without tests
-# bcbuild-test  # tests only
-# bbuild        # build and test together
-# bb            # build and functional tests
-# bbe           # build and extended tests
-# bbd           # build for debug
-# bnuke         # Wipe out all build data
+(1) Get all updates from upstream, this leaves us to the master branch 
+    % bg-update
 
+(2) cmake
+    % bcmake-<options>  # Configure what to build
+    % bcbuild           # Build without tests
+    % bctest            # Unit tests only
+
+(3) Combos
+    % bb                # Build and unit test together
+    % bbf               # Build, unit tests and functional tests 
+    % bbe               # Build, unit, functional  and extended tests
+    % bbd               # Build for debug
+
+(4) Individualy run tests after compilation
+    % btest             
+    % btest-ext
+
+(5) Housekeeping
+    % bnuke             # Wipe out all build data
+    % bg-clean          # Git removes all untracked files
+
+(6) Run fork binaries found in under /build/src
+    % bd                
+    % bdqt
+    % bcli
+    % bclin             # With named arguments
+    % bkill
+"""
+}
+
+bhelp-pr() {
+    echo """
 #-----------------------------------------------------------------------------#
 #                                   PR REVIEWS                                #
 #-----------------------------------------------------------------------------#
 
-# (0) Run the set up checklist first
+Note: Can use \"gh pr list\" and \"gh pr view <pr-number>\" to get info on the 
+terminal instead of Github
 
-# (1) Build and run the tests, look at the <build and test reference> section
+(1) Get the PR to review from upstream
+    % bg-getpr <pr-number>
 
-# (3) Locate how many commits the pr have until the last merge
-# % bg-oneline
+(2) Checkout the pr to review with \"git checkout pr/<number>\"
+    Note: We need to locate the last commit from GitHub
+    % bg-pr <pr-number> 
 
-# (4) Get the changed file names
-# % bgd-files <number-of-commits-backwards> # or
-# % git diff --name-only <last-reviewed-commit> <new-commit>
+(3) Checkout the commit to test
+    % git checkout <commit>
 
-# (5) Examine differences
+(4) Build and run the tests, look at the <build and test reference> section
 
-# - In a re-review check the differences since the last review using
-# % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
+(5) Locate how many commits the pr have until the last merge
+    % bg-oneline
 
-# - Go through each commit from old to new to examine the individual changes
-# each one interoduced. Just check how many commits the pr includes
-# % git show HEAD~<number-of-commit-back>
+(6) Get the changed file names
+    % bgd-files <number-of-commits-backwards> # or
+    % git diff --name-only <last-reviewed-commit> <new-commit>
 
-# - Examine the changes in each file, will launch on the prefered editor
-# can use the HEAD~ for a shortcut to the commit hases as well
-# % git difftool <last-reviewed-commit> <new-commit> -- <file>
+(7) Examine differences
 
-# - Note: If the `-- <file>` is left over, it will go to all of them sequentially
+    - In a re-review check the differences since the last review using
+    % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
 
-# - Open all the changed files witout the diff info
-# % bgd-files-open <number-of-commits-backwards>
+    - Go through each commit from old to new to examine the individual changes
+      each one interoduced. Just check how many commits the pr includes
+    % git show HEAD~<number-of-commit-back>
 
+    - Examine the changes in each file, will launch on the prefered editor
+      can use the HEAD~ for a shortcut to the commit hases as well
+    % git difftool <last-reviewed-commit> <new-commit> -- <file>
+
+    - Note: If the \"-- <file>\" is left over, it will go to all of them sequentially
+
+    - Open all the changed files witout the diff info
+    % bgd-files-open <number-of-commits-backwards>
+"""
+}
+
+bhelp-pr-create() {
+    echo """
 #-----------------------------------------------------------------------------#
 #                                   CREATE PR                                 #
 #-----------------------------------------------------------------------------#
 
-# (0) Create a local branch 
-# % git branch <new-branch-name>
+(0) Create a local branch 
+    % git branch <new-branch-name>
 
-# (1) Update from upstream
-# % git fetch upstream
+(1) Update from upstream
+    % git fetch upstream
 
-# (2) Rebase on upstream to get all recent changes
-# % git rebase upstream/master
+(2) Rebase on upstream to get all recent changes
+    % git rebase upstream/master
 
-# (3) Push to fork
-# % git push --force origin <new-branch-name>
+(3) Push to fork
+    % git push --force origin <new-branch-name>
 
-# (4) Open a PR from Github (Caution: Select the correct branch!)
+(4) Open a PR from Github (Caution: Select the correct branch!)
 
-# (5) Write a meaningful description
+(5) Write a meaningful description
 
-# (6) Add reviewers as cc @<nym>
+(6) Add reviewers as cc @<nym>
+"""
+}
 
+bhelp-pr-rebase() {
+    echo """
 #-----------------------------------------------------------------------------#
 #                                   REBASE PR                                 #
 #-----------------------------------------------------------------------------#
 
-# Note: Rebase just for the ci with no changes in the code
-# If you have changes see the <git rebase> section
+Note: Rebase just for the ci with no changes in the code
 
-# % bg-update
-# % git checkout <branch-name>
-# % git rebase upstream/master
-# % git push origin <branch-name> --force
+    % bg-update
+    % git checkout <branch-name>
+    % git rebase upstream/master
+    % git push origin <branch-name> --force
+"""
+}
 
+bhelp-debug-cpp() {
+    echo """
 #-----------------------------------------------------------------------------#
 #                                   DEBUG CPP                                 #
 #-----------------------------------------------------------------------------#
 
-# (0) Set up checklist first
+(1) Build for debugging
+    % bbd
 
-# (1) Build for debugging
-# % bbd
+(2) Open workspace on vscode depending on what to debug and follow the 
+    instructions at the .vscode-workspace file of the workspace
+    % vs-bitcoin
 
-# (2) Open workspace on vscode depending on what to debug and follow the 
-#     instructions at the .vscode-workspace file of the workspace
-# % vs-bitcoin
+(3) Choose between the debug configurations for bitcoin or unit tests
+"""
+}
 
-# (3) Choose between the debug configurations for bitcoin or unit tests
-
+bhelp-debug-py() {
+    echo """
 #-----------------------------------------------------------------------------#
 #                               DEBUG PY --> CPP                              #
 #-----------------------------------------------------------------------------#
 
-# (0) Set up checklist first
+(1) Build for debugging
+    % bbd
 
-# (1) Build for debugging (btest and btest-ext for functional if needed)
-# % bbd
+(2) Open workspace on vscode depending on what to debug and follow the 
+    instructions at the .vscode-workspace file of the workspace
+    % vs-bitcoin
 
-# (2) Open workspace on vscode depending on what to debug and follow the 
-#     instructions at the .vscode-workspace file of the workspace
-# % vs-bitcoin
+(3) Set breakpoints to both cpp and py files 
 
-# (3) Set breakpoints to both cpp and py files 
+(4) Launch the debugger for the test through the "launch" configuration
 
-# (4) Launch the debugger for the test through the "launch" configuration
+(5) Execution stops at the py breakpoint
 
-# (5) Execution stops at the py breakpoint
+(6) Attach the python process with the token from the dropdown to lldb 
 
-# (6) Attach the python process with the token from the dropdown to lldb 
-
-# (7) Run to continue debugging on the cpp file
-
+(7) Run to continue debugging on the cpp file
+"""
+}
 
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 #                                       ZSH                                   #
@@ -192,14 +222,6 @@
 # Export the LLVM Brew path in order to overide the system default LLVM
 # clang-tidy is now also dscoverable by bear
 export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
-
-# TOOD: Remove after LLVM tools needed to compile depends are included in th
-# `depends/Makefile`
-# export RANLIB=llvm-ranlib
-# export STRIP=llvm-strip
-# export NM=llvm-nm
-# export OBJDUMP=llvm-objdump
-# export DSYMUTIL=dsymutil
 
 # System tools
 export ED_=code # or vim
@@ -349,6 +371,9 @@ alias bg-ls="git ls-files"
 
 # Reset any changes and remove new files since the last commit
 alias bg-reset="git reset --hard HEAD; git clean -fd;"
+
+# Clean all untracked files to get a clean project
+alias bg-clean="git clean -dfx"
 
 #-----------------------------===<<< Git PR >>>===----------------------------#
 
@@ -550,10 +575,10 @@ alias bcmake-ct="cmake -B build \
 
 # CMake builds
 alias bcbuild="cmake --build build -j $NCORES_"
-alias bcbuild-test="ctest --test-dir build -j $NCORES_"
+alias bctest="ctest --test-dir build -j $NCORES_"
 
 # Build complete toolchain
-alias bbuild="bcmake && bcbuild && bcbuild-test"
+alias bb="bcmake && bcbuild && bctest"
 
 # Nuke the build directory to start from scratch
 alias bnuke="rm -fr $BPATH_/build"
@@ -717,13 +742,13 @@ alias bbench-list="bbench -list"
 #----------------------===<<< Build and test combos  >>>===-------------------#
 
 # Built and unit tests
-# % bbuild
+# % bb
 
-# Build and run unit and functional tests from clean
-alias bb="bbuild && btest"
+# Build and run unit and functional tests
+alias bbf="bb && btest"
 
-# Build and run unit and extended functional tests from clean
-alias bbe="bbuild && btest-ext"
+# Build and run unit functional and extended tests
+alias bbe="bb && btest-ext"
 
 # Build for debugging with no tests involved
 alias bbd="bcmake-debug && bcbuild"

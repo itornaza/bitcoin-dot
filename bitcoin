@@ -41,10 +41,10 @@
 #                                  CHECKLISTS                                 #
 #//////////////////////////////////////////////////////////////////////////////
 
-bhelp() {
+bh() {
     echo """
 #-----------------------------------------------------------------------------#
-#                       UPDATE, BUILD AND TEST REFERENCE                      #
+#                     UPDATE, BUILD, TEST & RUN REFERENCE                     #
 #-----------------------------------------------------------------------------#
 
 (1) Get all updates from upstream, this leaves us to the master branch 
@@ -78,7 +78,7 @@ bhelp() {
 """
 }
 
-bhelp-pr() {
+bh-pr() {
     echo """
 #-----------------------------------------------------------------------------#
 #                                   PR REVIEWS                                #
@@ -126,7 +126,7 @@ terminal instead of Github
 """
 }
 
-bhelp-pr-create() {
+bh-pr-create() {
     echo """
 #-----------------------------------------------------------------------------#
 #                                   CREATE PR                                 #
@@ -152,7 +152,7 @@ bhelp-pr-create() {
 """
 }
 
-bhelp-pr-rebase() {
+bh-pr-rebase() {
     echo """
 #-----------------------------------------------------------------------------#
 #                                   REBASE PR                                 #
@@ -167,7 +167,7 @@ Note: Rebase just for the ci with no changes in the code
 """
 }
 
-bhelp-debug-cpp() {
+bh-debug-cpp() {
     echo """
 #-----------------------------------------------------------------------------#
 #                                   DEBUG CPP                                 #
@@ -184,7 +184,7 @@ bhelp-debug-cpp() {
 """
 }
 
-bhelp-debug-py() {
+bh-debug-py() {
     echo """
 #-----------------------------------------------------------------------------#
 #                               DEBUG PY --> CPP                              #

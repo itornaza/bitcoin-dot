@@ -253,6 +253,7 @@ export RAMDISK_SIZE_EXT_=25165824
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/bitcoin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
+export BDATA_LOKI_="/Volumes/loki/Bitcoin"
 export BDOT_="$BITDEV_/bitcoin-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
 export BFUNC_="$BPATH_/build/test/functional"
@@ -297,7 +298,8 @@ alias bdot-r="vi -R $BDOT_/bitcoin"
 # Bitcoin paths
 alias bitdev="cd $BITDEV_;pwd"
 alias b="cd $BPATH_;pwd"
-alias bdata="cd $BDATA_;pwd"
+alias bdata="cd $BDATA_;pwd"    # Signet ops
+alias bdata-loki="cd $BDATA_LOKI_;pwd" # Blockchain lives here
 alias bdot="cd $BDOT_;pwd"
 alias btestlogs="cd $BTEST_LOGS_;pwd"
 
@@ -319,10 +321,12 @@ alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
 # Build with `make install` and only for the latest stable release!
 # % bitcoind # kept as is
 # % bitcoin-cli # kept as is
+alias bitcoind="bitcoind -datadir=$BDATA_LOKI_"
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
-alias bd="$BPATH_/build/src/bitcoind" # TODO append data dir command to storage
+alias bd="$BPATH_/build/src/bitcoind"
+alias bd-loki="$BPATH_/build/src/bitcoind -datadir=$BDATA_LOKI_"
 alias bdqt="$BPATH_/build/src/qt/bitcoin-qt"
 alias bcli="$BPATH_/build/src/bitcoin-cli"
 alias bclin="$BPATH_/build/src/bitcoin-cli -named"
@@ -584,13 +588,15 @@ alias bb="bcmake && bcbuild && bctest"
 alias bnuke="rm -fr $BPATH_/build"
 
 # Make plain commands to be executed from within the build directory
+# Note: For versions prior to v28.0 
 alias bdistclean="make distclean" # Includes make clean as well
 alias bclean="make clean"
 alias bmake="make -j $NCORES_"
 alias bcheck="make -j $NCORES_ check" # Unit and util tests
 alias bcache-clean="ccache -C"
 
-# DEPRECATED -- Configure commands used before transition to cmake
+# Configure commands used before transition to cmake
+# Note: For versions prior to v28.0 
 alias bconfigure="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
                   --with-incompatible-bdb --enable-surpress-external-warnings"
 alias bconfigure-bare="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_"
@@ -600,6 +606,18 @@ alias bconfigure-debug="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
 alias bconfigure-tsan="bconfigure-debug -sanitize=thread -02 -g"
 alias bconfigure-fuzz="./autogen.sh && ./configure CC=$BC_ CXX=$BCPP_ \
                       --enable-fuzz --with-sanitizers=fuzzer,address,undefined"
+
+
+# Sign the bitcoin binaries in order for macos to let you run them
+bsign() {
+    #$1: /path/to/bitcoin/build/src for development 
+    #   or /usr/local/bin for system wide installation
+    cd $1
+    xattr -d com.apple.quarantine bitcoin-cli bitcoin-qt bitcoin-tx bitcoin-util \
+          bitcoin-wallet bitcoind test_bitcoin
+    codesign -s - bitcoin-cli bitcoin-qt bitcoin-tx bitcoin-util bitcoin-wallet \
+             bitcoind test_bitcoin
+}
 
 #-----------------------------------------------------------------------------#
 #                                    TESTS                                    #

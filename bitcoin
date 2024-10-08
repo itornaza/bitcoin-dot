@@ -298,17 +298,24 @@ alias bdot-r="vi -R $BDOT_/bitcoin"
 # Bitcoin paths
 alias bitdev="cd $BITDEV_;pwd"
 alias b="cd $BPATH_;pwd"
-alias bdata="cd $BDATA_;pwd"    # Signet ops
-alias bdata-loki="cd $BDATA_LOKI_;pwd" # Blockchain lives here
+alias bdata="cd $BDATA_;pwd"    # Local disk
+alias bdata-loki="cd $BDATA_LOKI_;pwd" # External disk
 alias bdot="cd $BDOT_;pwd"
 alias btestlogs="cd $BTEST_LOGS_;pwd"
 
-# Open Bitcoin files
+# Open Bitcoin files on local disk
 alias bconf="$ED_ $BDATA_/bitcoin.conf"
 alias blog-main="$ED_ $BDATA_/debug.log"
 alias blog-test="$ED_ $BDATA_/testnet3/debug.log"
 alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
+
+# Open Bitcoin files on external disk
+alias bconf-loki="$ED_ $BDATA_LOKI_/bitcoin.conf"
+alias blog-main-loki="$ED_ $BDATA_LOKI_/debug.log"
+alias blog-test-loki="$ED_ $BDATA_LOKI_/testnet3/debug.log"
+alias blog-signet-loki="$ED_ $BDATA_LOKI_/signet/debug.log"
+alias blog-regtest-loki="$ED_ $BDATA_LOKI_/regtest/debug.log"
 
 # Visual Studio Code launch and debug workspace configurations
 alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"

@@ -293,7 +293,7 @@ alias bpips="/usr/bin/python3 -m pip install pyzmq"
 #-----------------------------------------------------------------------------#
 
 # This file in read mode
-alias bdot-r="vi -R $BDOT_/bitcoin"
+alias bdot-r="vim -R $BDOT_/bitcoin"
 
 # Bitcoin paths
 alias bitdev="cd $BITDEV_;pwd"

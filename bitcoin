@@ -170,7 +170,7 @@ Note: Rebase just for the ci with no changes in the code
 bh-debug-cpp() {
     echo """
 #-----------------------------------------------------------------------------#
-#                                   DEBUG CPP                                 #
+#                              DEBUG CPP - WITH VSCODE                        #
 #-----------------------------------------------------------------------------#
 
 (1) Build for debugging
@@ -187,7 +187,7 @@ bh-debug-cpp() {
 bh-debug-py() {
     echo """
 #-----------------------------------------------------------------------------#
-#                               DEBUG PY --> CPP                              #
+#                          DEBUG PY --> CPP WITH VSCODE                       #
 #-----------------------------------------------------------------------------#
 
 (1) Build for debugging
@@ -204,8 +204,56 @@ bh-debug-py() {
 (5) Execution stops at the py breakpoint
 
 (6) Attach the python process with the token from the dropdown to lldb 
-
+[<0;16;5M
 (7) Run to continue debugging on the cpp file
+"""
+}
+
+bh-lldb() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                               DEBUG WITH LLDB                               #
+#-----------------------------------------------------------------------------#
+
+(1) Build for debugging
+    % bbd
+
+(2) Run lldb on a unit test 
+    Note: See description on how to run unit tests above
+    % lldb -- build/src/test/test_bitcoin -t <module>/<test-case>
+
+(3) Set breakpoints on lines
+    (lldb) b <file>:<line>
+    (lldb) breakpoint set --file <file-name> --line <line-number>
+
+    Set breakpoint on a symbols
+    (lldb) b <symbol-name>
+    (lldb) b reakpoint set --name myFunction
+
+    List and delete breakpoints
+    (lldb) breakpoint list
+    (lldb) breakpoint delete # deletes them all
+    (lldb) breakpoint delete <breakpoint-id>
+
+(4) Start a debugging session
+    (lldb) run
+
+(5) Step into
+    (lldb) s
+
+    Step over
+    (lldb) n
+
+    Finish current function
+    (lldb) finish
+
+    Run until the next breakpoint
+    (lldb) complete
+
+(6) Print a variable
+    (lldb) p <variable-name>
+    (lldb) fr v <variable-name>
+
 """
 }
 
@@ -694,7 +742,9 @@ alias btest-cov="bcreate-ram-ext && btest-ram --jobs=$NJOBS_16_ --extended \
 
 #----------------------------===<<< Unit tests >>>===-------------------------#
 
-# bmake (i.e. make check) above runs both the unit and util tests
+# The `bb` command  above runs both the unit and util tests
+# To get a list of all unit test cases run
+# % /build/src/test/test_bitcoin --list_content
 
 # Run the unit test without re-compiling
 btest-unit() {

@@ -98,13 +98,11 @@ On debugging with Visual Studio code or not:
 
 - [Debugging Bitcoin Core](https://github.com/fjahr/debugging_bitcoin)
 
+- [lldb tutorial](https://lldb.llvm.org/use/tutorial.html)
+
 Misc external tools references
 
 - [Vim](https://www.vim.page/vim-commands-cheat-sheet)
-
-- [lldb tutorial](https://lldb.llvm.org/use/tutorial.html)
-
-- [fjahr's debugging bitcoin code](https://github.com/fjahr/debugging_bitcoin)
 
 ## License
 

@@ -530,6 +530,8 @@ bg-branch-update() {
 
 # Search for files including a pattern in a repository
 alias bgg="git grep -n " # <pattern> <optional:branch-name> -- <path>
+alias bgg-files-only="git grep -l " # <pattern> <optional:branch-name> -- <path>
+
 
 # List of files w/differences between given number of commits, default is 1
 # Hint: Run git log before to see how many commits back is the upstream/master

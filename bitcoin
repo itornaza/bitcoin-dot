@@ -220,7 +220,8 @@ bh-lldb() {
 
 (2) Run lldb on a unit test 
     Note: See description on how to run unit tests above
-    % lldb -- build/src/test/test_bitcoin -t <module>/<test-case>
+    % lldb -- build/src/test/test_bitcoin ---log_level=all \
+              --run_test=<module>/<test-case>
 
 (3) Set breakpoints on lines
     (lldb) b <file>:<line>
@@ -235,10 +236,24 @@ bh-lldb() {
     (lldb) breakpoint delete # deletes them all
     (lldb) breakpoint delete <breakpoint-id>
 
-(4) Start a debugging session
+(4) Set watchpoints
+    (lldb) watch set var <variable-name>
+   
+    Stop when the variable has a value we desire
+    (lldb) watch modify -c '(variable-name==desired-value)'
+
+    View all watchpoints
+    (lldb) watch list -v
+
+(5) You can opt for tui mode before starting the session
+    (lldb) gui
+    And return to cli  with
+    (lldb) quit
+
+(6) Start a debugging session
     (lldb) run
 
-(5) Step into
+(7) Step into
     (lldb) s
 
     Step over
@@ -250,7 +265,7 @@ bh-lldb() {
     Run until the next breakpoint
     (lldb) complete
 
-(6) Print a variable
+(7) Print a variable
     (lldb) p <variable-name>
     (lldb) fr v <variable-name>
 

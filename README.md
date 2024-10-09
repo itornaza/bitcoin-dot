@@ -102,6 +102,10 @@ Misc external tools references
 
 - [Vim](https://www.vim.page/vim-commands-cheat-sheet)
 
+- [lldb tutorial](https://lldb.llvm.org/use/tutorial.html)
+
+- [fjahr's debugging bitcoin code](https://github.com/fjahr/debugging_bitcoin)
+
 ## License
 
 [Bitcoin dot](#bitcoin-dot) is released under the terms of the [MIT license](https://opensource.org/licenses/MIT)

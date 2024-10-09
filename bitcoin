@@ -39,6 +39,7 @@
 
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 #                                  CHECKLISTS                                 #
+#                       (`bh`  - prefix for bitcoin help                      #
 #//////////////////////////////////////////////////////////////////////////////
 
 bh() {
@@ -218,10 +219,15 @@ bh-lldb() {
 (1) Build for debugging
     % bbd
 
-(2) Run lldb on a unit test 
+(2) Open an lldb session on a unit test 
     Note: See description on how to run unit tests above
     % lldb -- build/src/test/test_bitcoin ---log_level=all \
               --run_test=<module>/<test-case>
+
+(3) Launch lldb
+    (lldb) r # or
+    (lldb) run # or
+    (lldb) process launch
 
 (3) Set breakpoints on lines
     (lldb) b <file>:<line>
@@ -245,29 +251,68 @@ bh-lldb() {
     View all watchpoints
     (lldb) watch list -v
 
-(5) You can opt for tui mode before starting the session
+(5) You can opt for tui mode after setting break points and 
+    starting the session
     (lldb) gui
-    And return to cli  with
+    And return to cli with
     (lldb) quit
 
 (6) Start a debugging session
     (lldb) run
 
 (7) Step into
-    (lldb) s
+    (lldb) s 
 
     Step over
     (lldb) n
-
+    
     Finish current function
     (lldb) finish
 
     Run until the next breakpoint
     (lldb) complete
 
-(7) Print a variable
+(8) Print a variable
     (lldb) p <variable-name>
     (lldb) fr v <variable-name>
+    (lldb) fr v # displays all variables
+
+(9) Threads
+    (lldb) thread step-in
+    (lldb) thread step-over
+    (lldb) thread step-out
+    (lldb) thread list
+    (lldb) thread backtrace
+    lldb) thread backtrace all
+    (lldb) thread select <thread-number>
+
+(10) Attach lldb to existing process
+    
+    Get the process id from the process name
+    % pgrep -l <process-name>
+
+    See all info about the process
+    % ps aux | grep <process-name>
+
+    Alternatively, you can do the above interactive with htop
+    % htop
+    and search for the process name on the pane
+
+    (lldb) process attach --pid <process-id>
+    (lldb) process attach -p <process-id>
+    (lldb) process attach --name <process-name>
+    (lldb) process attach --name <process-name> --waitfor
+
+(11) Attach lldb to a future process
+
+    % b
+    % lldb
+    (lldb) process attach --name test_bitcoin --waitfor
+ 
+    Open another terminal window
+    % btest-unit-one <module> <test-case>
+
+    Return to lldb terminal, set your breakpoints and hit `continue`
 
 """
 }

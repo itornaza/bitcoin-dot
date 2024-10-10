@@ -379,10 +379,13 @@ export BGMASTER_="master"
 alias pip="python3 -m pip"
 
 # Install brew dependencies
-alias btools="brew install ccache llvm berkeley-db@4 automake boost \
+alias btools="brew install cmake ccache llvm berkeley-db@4 automake boost \
               libevent libnatpmp libtool miniupmpc pkg-config python \
               qrencode qt@5 sqlite zeromq flame doxygen graphviz lcov \
               bear clang-format flake8 mypy codespell vulture"
+
+# Install Xcode tools
+# % xcode-select --install
 
 # Upadte all installed brew packages
 btools-update() {

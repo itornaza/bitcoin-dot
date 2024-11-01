@@ -375,9 +375,6 @@ export BGMASTER_="master"
 #                                INSTALLATIONS                                #
 #-----------------------------------------------------------------------------#
 
-# Python
-alias pip="python3 -m pip"
-
 # Install brew dependencies
 alias btools="brew install cmake ccache llvm berkeley-db@4 automake boost \
               libevent libnatpmp libtool miniupmpc pkg-config python \
@@ -926,7 +923,7 @@ alias bclean-all="bclean; bcache-clean; btest-clean; bdox-clean"
 warnet-run() {
     bitdev
     cd warnet
-    python3.12 -m venv .venv && source .venv/bin/activate && pip3.12 install -e .
+    python3.13 -m venv .venv && source .venv/bin/activate && pip3.12 install -e .
     open /Applications/Docker.app
     kubectl config set-context --current --namespace=warnet
     warnet setup

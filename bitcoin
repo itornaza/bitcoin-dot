@@ -114,7 +114,11 @@ terminal instead of Github
 
     - Go through each commit from old to new to examine the individual changes
       each one interoduced. Just check how many commits the pr includes
-    % git show HEAD~<number-of-commit-back>
+    % bg-show <number-of-commit-back>
+
+    - Or, you can use interactive rebase starting from the last merge before
+      the PR like:
+    % git rebase -i <last-merge-commit>
 
     - Examine the changes in each file, will launch on the prefered editor
       can use the HEAD~ for a shortcut to the commit hases as well
@@ -505,6 +509,11 @@ bg-getpr() {
 bg-pr() {
     # $1: PR number
     git checkout pr-$1
+}
+
+bg-show() {
+    # $1: Commit back
+    git show HEAD~$1
 }
 
 #--------------------------===<<< Git fork handling >>>===--------------------#

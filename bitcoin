@@ -239,7 +239,7 @@ bh-lldb() {
 
     Set breakpoint on a symbols
     (lldb) b <symbol-name>
-    (lldb) b reakpoint set --name myFunction
+    (lldb) breakpoint set --name myFunction
 
     List and delete breakpoints
     (lldb) breakpoint list

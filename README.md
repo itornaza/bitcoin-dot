@@ -6,13 +6,13 @@ It is comprised by a just a limited set of text files that can be used either in
 
 ## Summary
 
-To the rescue of a developer that wants to onboard bitcoin, there is an abundance of resources  included into the Bitcoin Core documentation as well as other sources mostly offered by long term contributors, see [references](#references) below. However, the whole process may seem intimidating to a newcomer! 
+To the rescue of a developer that wants to onboard bitcoin, there is an abundance of resources included into the Bitcoin Core documentation as well as other sources mostly offered by long term contributors, see [references](#references) below. However, the whole process may seem intimidating to a newcomer! 
 
 With that in mind, and to streamline commands and processes that are essential to set up, run and debug bitcoin, I offer the included dot file named [bitcoin](https://github.com/itornaza/btc-dot/blob/main/bitcoin). I have been updating it in constant time ever since I started my bitcoin journey and it seems very obvious to me that I will never stop. So, if you find a TODO anywhere, you have been warned.
 
 Its usage should be as simple as sourcing it to `.zshrc` in order to get the included commands available to your own shell. The `.zshrc` file is nothing more than a configuration file for the zsh - or otherwise known as the z shell. It is a script that runs every time a you start a new interactive shell and is typically located in your home directory `~/.zshrc`.
 
-What is more, this file can also be used as a reference, or even better a checklist, to assist with procedures such how to build the project, how  set up your system to do a pr review, or how to initiate a debugging session. In my case, I find it handy to have it open (as read only!) on the side of my basic terminal arrangement during development for quick look ups.
+What is more, this file can also be used as a reference, or even better a checklist, to assist with procedures such how to build the project, how to set up your system to do a pr review, or how to initiate a debugging session. In my case, I find it handy to have it open (as read only!) on the side of my basic terminal arrangement during development for quick look ups.
 
 ## System requirements
 
@@ -32,7 +32,7 @@ You just have to clone this repository to a directory on your machine using:
 
 ## Documentation
 
-For a quick intro just read the next two sections [Bitcoin dot file](#bitcoin-dot-file) and [Visual Studio Code configuration file](#visual-studio-code-configuration-file) which very brief on purpose because I just want the project files to be self contained. 
+For a quick intro just read the next two sections [Bitcoin dot file](#bitcoin-dot-file) and [Visual Studio Code configuration file](#visual-studio-code-configuration-file) which very brief on purpose because I just want the project files to be self-contained. 
 
 For more relevant and detailed documentation please refer to the respective comment sections within each project file.
 
@@ -46,7 +46,7 @@ It is divided into the following two main sections.
 
 - `zsh` which contains the actual commands that do the job. Feel free to add you own commands, rename the existing ones or do whatever you deem appropriate to suit your needs. This section is also divided to logical groupings like, `Installations`, `Git`, `Build`, `Tests`, etc to further guide you through the process or help you locate desired commands more easily. 
 
-- The `git difftool` can also be easily intergrated with vscode as well for a more visual spot of the differences.
+- The `git difftool` can also be easily integrated with vscode as well for a more visual spot of the differences.
 
 ### How to use
 

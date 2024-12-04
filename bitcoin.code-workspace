@@ -2,7 +2,7 @@
     /** bitcoind.code-workspace
      *
      * Configuration file for debugging bitcoin with the help of the visual
-     * studio code debugging aide. Requires  a local installation of LLVM 
+     * studio code debugging aide. Requires a local installation of LLVM 
      * that matches Bitcoin prerequisites
      *
      * Part of the btc-dot project https://github.com/itornaza/btc-dot 

@@ -20,7 +20,7 @@
 #                                                                             #
 # 5. The file has two sections, checklists and zsh                            #
 #    - To go through procedures for everyday work use the checklists below as #
-#      a reference which is by no means exhastive                             #
+#      a reference which is by no means exhaustive                             #
 #    - To change intended behavior or optimise commands edit the zsh section  #
 #                                                                             #
 # 6. Visual Studio Code optional integration                                  #
@@ -62,7 +62,7 @@ bh() {
     % bbe               # Build, unit, functional and extended tests
     % bbd               # Build for debug
 
-(4) Individualy run tests after compilation
+(4) Individually run tests after compilation
     % btest             
     % btest-ext
 
@@ -113,20 +113,20 @@ terminal instead of Github
     % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
 
     - Go through each commit from old to new to examine the individual changes
-      each one interoduced. Just check how many commits the pr includes
+      each one introduced. Just check how many commits the pr includes
     % bg-show <number-of-commit-back>
 
     - Or, you can use interactive rebase starting from the last merge before
       the PR like:
     % git rebase -i <last-merge-commit>
 
-    - Examine the changes in each file, will launch on the prefered editor
-      can use the HEAD~ for a shortcut to the commit hases as well
+    - Examine the changes in each file, will launch on the preferred editor
+      can use the HEAD~ for a shortcut to the commit hashes as well
     % git difftool <last-reviewed-commit> <new-commit> -- <file>
 
     - Note: If the \"-- <file>\" is left over, it will go to all of them sequentially
 
-    - Open all the changed files witout the diff info
+    - Open all the changed files without the diff info
     % bgd-files-open <number-of-commits-backwards>
 """
 }
@@ -331,8 +331,8 @@ bh-lldb() {
 #                  (`_` - suffix for all variables in this file)              #
 #-----------------------------------------------------------------------------#
 
-# Export the LLVM Brew path in order to overide the system default LLVM
-# clang-tidy is now also dscoverable by bear
+# Export the LLVM Brew path in order to override the system default LLVM
+# clang-tidy is now also discoverable by bear
 export PATH="$(brew --prefix)/opt/llvm/bin:$PATH"
 
 # System tools
@@ -388,7 +388,7 @@ alias btools="brew install cmake ccache llvm berkeley-db@4 automake boost \
 # Install Xcode tools
 # % xcode-select --install
 
-# Upadte all installed brew packages
+# Update all installed brew packages
 btools-update() {
     brew update; 
     echo "Running brew upgrade..."
@@ -518,7 +518,7 @@ bg-show() {
 
 #--------------------------===<<< Git fork handling >>>===--------------------#
 
-# Update the fork localy and on github from the original repository
+# Update the fork locally and on github from the original repository
 bg-update() {
     b
     git fetch upstream
@@ -939,7 +939,7 @@ warnet-run() {
     test/rpc_test.py
 }
 
-# Usefull commands
+# Useful commands
 
 # Run a simulation
 # % warnet deploy <path-to-network>

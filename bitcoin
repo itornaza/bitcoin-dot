@@ -36,291 +36,6 @@
 ###############################################################################
 
 
-
-#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-#                                  CHECKLISTS                                 #
-#                       (`bh`  - prefix for bitcoin help                      #
-#//////////////////////////////////////////////////////////////////////////////
-
-bh() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                     UPDATE, BUILD, TEST & RUN REFERENCE                     #
-#-----------------------------------------------------------------------------#
-
-(1) Get all updates from upstream, this leaves us to the master branch 
-    % bg-update
-
-(2) cmake
-    % bcmake-<options>  # Configure what to build
-    % bcbuild           # Build without tests
-    % bctest            # Unit tests only
-
-(3) Combos
-    % bb                # Build and unit test together
-    % bbf               # Build, unit tests and functional tests 
-    % bbe               # Build, unit, functional and extended tests
-    % bbd               # Build for debug
-
-(4) Individually run tests after compilation
-    % btest             
-    % btest-ext
-
-(5) Housekeeping
-    % bnuke             # Wipe out all build data
-    % bg-clean          # Git removes all untracked files
-
-(6) Run fork binaries found in under /build/src
-    % bd                
-    % bdqt
-    % bcli
-    % bclin             # With named arguments
-    % bkill
-"""
-}
-
-bh-pr() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                                   PR REVIEWS                                #
-#-----------------------------------------------------------------------------#
-
-Note: Can use \"gh pr list\" and \"gh pr view <pr-number>\" to get info on the 
-terminal instead of Github
-
-(1) Get the PR to review from upstream
-    % bg-getpr <pr-number>
-
-(2) Checkout the pr to review with \"git checkout pr/<number>\"
-    Note: We need to locate the last commit from GitHub
-    % bg-pr <pr-number> 
-
-(3) Checkout the commit to test
-    % git checkout <commit>
-
-(4) Build and run the tests, look at the <build and test reference> section
-
-(5) Locate how many commits the pr have until the last merge
-    % bg-oneline
-
-(6) Get the changed file names
-    % bgd-files <number-of-commits-backwards> # or
-    % git diff --name-only <last-reviewed-commit> <new-commit>
-
-(7) Examine differences
-
-    - In a re-review check the differences since the last review using
-    % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
-
-    - Go through each commit from old to new to examine the individual changes
-      each one introduced. Just check how many commits the pr includes
-    % bg-show <number-of-commit-back>
-
-    - Or, you can use interactive rebase starting from the last merge before
-      the PR like:
-    % git rebase -i <last-merge-commit>
-
-    - Examine the changes in each file, will launch on the preferred editor
-      can use the HEAD~ for a shortcut to the commit hashes as well
-    % git difftool <last-reviewed-commit> <new-commit> -- <file>
-
-    - Note: If the \"-- <file>\" is left over, it will go to all of them sequentially
-
-    - Open all the changed files without the diff info
-    % bgd-files-open <number-of-commits-backwards>
-"""
-}
-
-bh-pr-create() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                                   CREATE PR                                 #
-#-----------------------------------------------------------------------------#
-
-(0) Create a local branch 
-    % git branch <new-branch-name>
-
-(1) Update from upstream
-    % git fetch upstream
-
-(2) Rebase on upstream to get all recent changes
-    % git rebase upstream/master
-
-(3) Push to fork
-    % git push --force origin <new-branch-name>
-
-(4) Open a PR from Github (Caution: Select the correct branch!)
-
-(5) Write a meaningful description
-
-(6) Add reviewers as cc @<nym>
-"""
-}
-
-bh-pr-rebase() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                                   REBASE PR                                 #
-#-----------------------------------------------------------------------------#
-
-Note: Rebase just for the ci with no changes in the code
-
-    % bg-update
-    % git checkout <branch-name>
-    % git rebase upstream/master
-    % git push origin <branch-name> --force
-"""
-}
-
-bh-debug-cpp() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                              DEBUG CPP - WITH VSCODE                        #
-#-----------------------------------------------------------------------------#
-
-(1) Build for debugging
-    % bbd
-
-(2) Open workspace on vscode depending on what to debug and follow the 
-    instructions at the .vscode-workspace file of the workspace
-    % vs-bitcoin
-
-(3) Choose between the debug configurations for bitcoin or unit tests
-"""
-}
-
-bh-debug-py() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                          DEBUG PY --> CPP WITH VSCODE                       #
-#-----------------------------------------------------------------------------#
-
-(1) Build for debugging
-    % bbd
-
-(2) Open workspace on vscode depending on what to debug and follow the 
-    instructions at the .vscode-workspace file of the workspace
-    % vs-bitcoin
-
-(3) Set breakpoints to both cpp and py files 
-
-(4) Launch the debugger for the test through the "launch" configuration
-
-(5) Execution stops at the py breakpoint
-
-(6) Attach the python process with the token from the dropdown to lldb 
-
-(7) Run to continue debugging on the cpp file
-"""
-}
-
-bh-lldb() {
-    echo """
-#-----------------------------------------------------------------------------#
-#                               DEBUG WITH LLDB                               #
-#-----------------------------------------------------------------------------#
-
-(1) Build for debugging
-    % bbd
-
-(2) Open an lldb session on a unit test 
-    Note: See description on how to run unit tests above
-    % lldb -- build/src/test/test_bitcoin ---log_level=all \
-              --run_test=<module>/<test-case>
-
-(3) Launch lldb
-    (lldb) r # or
-    (lldb) run # or
-    (lldb) process launch
-
-(3) Set breakpoints on lines
-    (lldb) b <file>:<line>
-    (lldb) breakpoint set --file <file-name> --line <line-number>
-
-    Set breakpoint on a symbols
-    (lldb) b <symbol-name>
-    (lldb) breakpoint set --name myFunction
-
-    List and delete breakpoints
-    (lldb) breakpoint list
-    (lldb) breakpoint delete # deletes them all
-    (lldb) breakpoint delete <breakpoint-id>
-
-(4) Set watchpoints
-    (lldb) watch set var <variable-name>
-   
-    Stop when the variable has a value we desire
-    (lldb) watch modify -c '(variable-name==desired-value)'
-
-    View all watchpoints
-    (lldb) watch list -v
-
-(5) You can opt for tui mode after setting break points and 
-    starting the session
-    (lldb) gui
-    And return to cli with
-    (lldb) quit
-
-(6) Start a debugging session
-    (lldb) run
-
-(7) Step into
-    (lldb) s 
-
-    Step over
-    (lldb) n
-    
-    Finish current function
-    (lldb) finish
-
-    Run until the next breakpoint
-    (lldb) complete
-
-(8) Print a variable
-    (lldb) p <variable-name>
-    (lldb) fr v <variable-name>
-    (lldb) fr v # displays all variables
-
-(9) Threads
-    (lldb) thread step-in
-    (lldb) thread step-over
-    (lldb) thread step-out
-    (lldb) thread list
-    (lldb) thread backtrace
-    lldb) thread backtrace all
-    (lldb) thread select <thread-number>
-
-(10) Attach lldb to existing process
-    
-    Get the process id from the process name
-    % pgrep -l <process-name>
-
-    See all info about the process
-    % ps aux | grep <process-name>
-
-    Alternatively, you can do the above interactive with htop
-    % htop
-    and search for the process name on the pane
-
-    (lldb) process attach --pid <process-id>
-    (lldb) process attach -p <process-id>
-    (lldb) process attach --name <process-name>
-    (lldb) process attach --name <process-name> --waitfor
-
-(11) Attach lldb to a future process
-
-    % b
-    % lldb
-    (lldb) process attach --name test_bitcoin --waitfor
- 
-    Open another terminal window
-    % btest-unit-one <module> <test-case>
-
-    Return to lldb terminal, set your breakpoints and hit `continue`
-
-"""
-}
-
 #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 #                                       ZSH                                   #
 #//////////////////////////////////////////////////////////////////////////////
@@ -955,3 +670,288 @@ warnet-run() {
 # warnet deploy test/data/bitcoin_conf
 # warnet run resources/scenario/invdos.py
 # warnet bitcoin rpc tank-0016 getpeerinfo
+
+
+#\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+#                                  CHECKLISTS                                 #
+#                       (`bh`  - prefix for bitcoin help                      #
+#//////////////////////////////////////////////////////////////////////////////
+
+bh() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                     UPDATE, BUILD, TEST & RUN REFERENCE                     #
+#-----------------------------------------------------------------------------#
+
+(1) Get all updates from upstream, this leaves us to the master branch 
+    % bg-update
+
+(2) cmake
+    % bcmake-<options>  # Configure what to build
+    % bcbuild           # Build without tests
+    % bctest            # Unit tests only
+
+(3) Combos
+    % bb                # Build and unit test together
+    % bbf               # Build, unit tests and functional tests 
+    % bbe               # Build, unit, functional and extended tests
+    % bbd               # Build for debug
+
+(4) Individually run tests after compilation
+    % btest             
+    % btest-ext
+
+(5) Housekeeping
+    % bnuke             # Wipe out all build data
+    % bg-clean          # Git removes all untracked files
+
+(6) Run fork binaries found in under /build/src
+    % bd                
+    % bdqt
+    % bcli
+    % bclin             # With named arguments
+    % bkill
+"""
+}
+
+bh-pr() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                                   PR REVIEWS                                #
+#-----------------------------------------------------------------------------#
+
+Note: Can use \"gh pr list\" and \"gh pr view <pr-number>\" to get info on the 
+terminal instead of Github
+
+(1) Get the PR to review from upstream
+    % bg-getpr <pr-number>
+
+(2) Checkout the pr to review with \"git checkout pr/<number>\"
+    Note: We need to locate the last commit from GitHub
+    % bg-pr <pr-number> 
+
+(3) Checkout the commit to test
+    % git checkout <commit>
+
+(4) Build and run the tests, look at the <build and test reference> section
+
+(5) Locate how many commits the pr have until the last merge
+    % bg-oneline
+
+(6) Get the changed file names
+    % bgd-files <number-of-commits-backwards> # or
+    % git diff --name-only <last-reviewed-commit> <new-commit>
+
+(7) Examine differences
+
+    - In a re-review check the differences since the last review using
+    % bgd-range <previous-pr-head> <current-pr-head> <number-of-pr-commits>
+
+    - Go through each commit from old to new to examine the individual changes
+      each one introduced. Just check how many commits the pr includes
+    % bg-show <number-of-commit-back>
+
+    - Or, you can use interactive rebase starting from the last merge before
+      the PR like:
+    % git rebase -i <last-merge-commit>
+
+    - Examine the changes in each file, will launch on the preferred editor
+      can use the HEAD~ for a shortcut to the commit hashes as well
+    % git difftool <last-reviewed-commit> <new-commit> -- <file>
+
+    - Note: If the \"-- <file>\" is left over, it will go to all of them sequentially
+
+    - Open all the changed files without the diff info
+    % bgd-files-open <number-of-commits-backwards>
+"""
+}
+
+bh-pr-create() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                                   CREATE PR                                 #
+#-----------------------------------------------------------------------------#
+
+(0) Create a local branch 
+    % git branch <new-branch-name>
+
+(1) Update from upstream
+    % git fetch upstream
+
+(2) Rebase on upstream to get all recent changes
+    % git rebase upstream/master
+
+(3) Push to fork
+    % git push --force origin <new-branch-name>
+
+(4) Open a PR from Github (Caution: Select the correct branch!)
+
+(5) Write a meaningful description
+
+(6) Add reviewers as cc @<nym>
+"""
+}
+
+bh-pr-rebase() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                                   REBASE PR                                 #
+#-----------------------------------------------------------------------------#
+
+Note: Rebase just for the ci with no changes in the code
+
+    % bg-update
+    % git checkout <branch-name>
+    % git rebase upstream/master
+    % git push origin <branch-name> --force
+"""
+}
+
+bh-debug-cpp() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                              DEBUG CPP - WITH VSCODE                        #
+#-----------------------------------------------------------------------------#
+
+(1) Build for debugging
+    % bbd
+
+(2) Open workspace on vscode depending on what to debug and follow the 
+    instructions at the .vscode-workspace file of the workspace
+    % vs-bitcoin
+
+(3) Choose between the debug configurations for bitcoin or unit tests
+"""
+}
+
+bh-debug-py() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                          DEBUG PY --> CPP WITH VSCODE                       #
+#-----------------------------------------------------------------------------#
+
+(1) Build for debugging
+    % bbd
+
+(2) Open workspace on vscode depending on what to debug and follow the 
+    instructions at the .vscode-workspace file of the workspace
+    % vs-bitcoin
+
+(3) Set breakpoints to both cpp and py files 
+
+(4) Launch the debugger for the test through the "launch" configuration
+
+(5) Execution stops at the py breakpoint
+
+(6) Attach the python process with the token from the dropdown to lldb 
+
+(7) Run to continue debugging on the cpp file
+"""
+}
+
+bh-lldb() {
+    echo """
+#-----------------------------------------------------------------------------#
+#                               DEBUG WITH LLDB                               #
+#-----------------------------------------------------------------------------#
+
+(1) Build for debugging
+    % bbd
+
+(2) Open an lldb session on a unit test 
+    Note: See description on how to run unit tests above
+    % lldb -- build/src/test/test_bitcoin ---log_level=all \
+              --run_test=<module>/<test-case>
+
+(3) Launch lldb
+    (lldb) r # or
+    (lldb) run # or
+    (lldb) process launch
+
+(3) Set breakpoints on lines
+    (lldb) b <file>:<line>
+    (lldb) breakpoint set --file <file-name> --line <line-number>
+
+    Set breakpoint on a symbols
+    (lldb) b <symbol-name>
+    (lldb) breakpoint set --name myFunction
+
+    List and delete breakpoints
+    (lldb) breakpoint list
+    (lldb) breakpoint delete # deletes them all
+    (lldb) breakpoint delete <breakpoint-id>
+
+(4) Set watchpoints
+    (lldb) watch set var <variable-name>
+   
+    Stop when the variable has a value we desire
+    (lldb) watch modify -c '(variable-name==desired-value)'
+
+    View all watchpoints
+    (lldb) watch list -v
+
+(5) You can opt for tui mode after setting break points and 
+    starting the session
+    (lldb) gui
+    And return to cli with
+    (lldb) quit
+
+(6) Start a debugging session
+    (lldb) run
+
+(7) Step into
+    (lldb) s 
+
+    Step over
+    (lldb) n
+    
+    Finish current function
+    (lldb) finish
+
+    Run until the next breakpoint
+    (lldb) complete
+
+(8) Print a variable
+    (lldb) p <variable-name>
+    (lldb) fr v <variable-name>
+    (lldb) fr v # displays all variables
+
+(9) Threads
+    (lldb) thread step-in
+    (lldb) thread step-over
+    (lldb) thread step-out
+    (lldb) thread list
+    (lldb) thread backtrace
+    lldb) thread backtrace all
+    (lldb) thread select <thread-number>
+
+(10) Attach lldb to existing process
+    
+    Get the process id from the process name
+    % pgrep -l <process-name>
+
+    See all info about the process
+    % ps aux | grep <process-name>
+
+    Alternatively, you can do the above interactive with htop
+    % htop
+    and search for the process name on the pane
+
+    (lldb) process attach --pid <process-id>
+    (lldb) process attach -p <process-id>
+    (lldb) process attach --name <process-name>
+    (lldb) process attach --name <process-name> --waitfor
+
+(11) Attach lldb to a future process
+
+    % b
+    % lldb
+    (lldb) process attach --name test_bitcoin --waitfor
+ 
+    Open another terminal window
+    % btest-unit-one <module> <test-case>
+
+    Return to lldb terminal, set your breakpoints and hit `continue`
+
+"""
+}

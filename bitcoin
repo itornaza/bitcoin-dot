@@ -20,7 +20,7 @@
 #                                                                             #
 # 5. The file has two sections, checklists and zsh                            #
 #    - To go through procedures for everyday work use the checklists below as #
-#      a reference which is by no means exhaustive                             #
+#      a reference which is by no means exhaustive                            #
 #    - To change intended behavior or optimise commands edit the zsh section  #
 #                                                                             #
 # 6. Visual Studio Code optional integration                                  #

@@ -80,7 +80,7 @@ export RAMDISK_SIZE_EXT_=25165824
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/bitcoin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
-export BDATA_LOKI_="/Volumes/loki/Bitcoin"
+export BDATA_EXT_HDD_="/Volumes/mercury/Bitcoin"
 export BDOT_="$BITDEV_/bitcoin-dot" # Location of THIS file
 export BTEST_="$BPATH_/test"
 export BFUNC_="$BPATH_/build/test/functional"
@@ -126,7 +126,7 @@ alias bdot-r="vim -R $BDOT_/bitcoin"
 alias bitdev="cd $BITDEV_;pwd"
 alias b="cd $BPATH_;pwd"
 alias bdata="cd $BDATA_;pwd"    # Local disk
-alias bdata-loki="cd $BDATA_LOKI_;pwd" # External disk
+alias bdata-ext-hdd="cd $BDATA_EXT_HDD_;pwd" # External disk
 alias bdot="cd $BDOT_;pwd"
 alias btestlogs="cd $BTEST_LOGS_;pwd"
 
@@ -138,11 +138,11 @@ alias blog-signet="$ED_ $BDATA_/signet/debug.log"
 alias blog-regtest="$ED_ $BDATA_/regtest/debug.log"
 
 # Open Bitcoin files on external disk
-alias bconf-loki="$ED_ $BDATA_LOKI_/bitcoin.conf"
-alias blog-main-loki="$ED_ $BDATA_LOKI_/debug.log"
-alias blog-test-loki="$ED_ $BDATA_LOKI_/testnet3/debug.log"
-alias blog-signet-loki="$ED_ $BDATA_LOKI_/signet/debug.log"
-alias blog-regtest-loki="$ED_ $BDATA_LOKI_/regtest/debug.log"
+alias bconf-ext-hdd="$ED_ $BDATA_EXT_HDD_/bitcoin.conf"
+alias blog-main-ext-hdd="$ED_ $BDATA_EXT_HDD_/debug.log"
+alias blog-test-ext-hdd="$ED_ $BDATA_EXT_HDD_/testnet3/debug.log"
+alias blog-signet-ext-hdd="$ED_ $BDATA_EXT_HDD_/signet/debug.log"
+alias blog-regtest-ext-hdd="$ED_ $BDATA_EXT_HDD_/regtest/debug.log"
 
 # Visual Studio Code launch and debug workspace configurations
 alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
@@ -155,12 +155,12 @@ alias vs-bitcoin="code $BDOT_/bitcoin.code-workspace"
 # Build with `make install` and only for the latest stable release!
 # % bitcoind # kept as is
 # % bitcoin-cli # kept as is
-alias bitcoind="bitcoind -datadir=$BDATA_LOKI_"
+alias bitcoind="bitcoind -datadir=$BDATA_EXT_HDD_"
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
 alias bd="$BPATH_/build/src/bitcoind"
-alias bd-loki="$BPATH_/build/src/bitcoind -datadir=$BDATA_LOKI_" 
+alias bd-ext-hdd="$BPATH_/build/src/bitcoind -datadir=$BDATA_EXT_HDD_" 
 alias bdqt="$BPATH_/build/src/qt/bitcoin-qt"
 alias bcli="$BPATH_/build/src/bitcoin-cli"
 alias bclin="$BPATH_/build/src/bitcoin-cli -named"

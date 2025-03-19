@@ -79,6 +79,7 @@ export RAMDISK_SIZE_EXT_=25165824
 # Bitcoin paths
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/bitcoin"
+export BINPATH_="$BPATH_/bin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDATA_EXT_HDD_="/Volumes/mercury/Bitcoin"
 export BDOT_="$BITDEV_/bitcoin-dot" # Location of THIS file
@@ -159,11 +160,11 @@ alias bitcoind="bitcoind -datadir=$BDATA_EXT_HDD_"
 alias bitcoin-clin="bitcoin-cli -named"
 
 # LOCAL: bitcoind and bitcoin-cli within the scope of bitcoin core project path
-alias bd="$BPATH_/build/src/bitcoind"
-alias bd-ext-hdd="$BPATH_/build/src/bitcoind -datadir=$BDATA_EXT_HDD_" 
-alias bdqt="$BPATH_/build/src/qt/bitcoin-qt"
-alias bcli="$BPATH_/build/src/bitcoin-cli"
-alias bclin="$BPATH_/build/src/bitcoin-cli -named"
+alias bd="$BINPATH_/bitcoind"
+alias bd-ext-hdd="$BINPATH_/bitcoind -datadir=$BDATA_EXT_HDD_"
+alias bdqt="$BINPATH_/qt/bitcoin-qt"
+alias bcli="$BINPATH_/bitcoin-cli"
+alias bclin="$BINPATH_/bitcoin-cli -named"
 
 # Kill bitcoind if forgotten to stop it properly
 alias bkill="pkill -9 bitcoind"
@@ -426,7 +427,7 @@ alias bctest="ctest --test-dir build -j $NCORES_"
 alias bb="bcmake && bcbuild && bctest"
 
 # Nuke the build directory to start from scratch
-alias bnuke="rm -fr $BPATH_/build"
+alias bnuke="rm -fr $BINPATH_"
 
 # Make plain commands to be executed from within the build directory
 # Note: For versions prior to v28.0 

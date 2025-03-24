@@ -79,7 +79,7 @@ export RAMDISK_SIZE_EXT_=25165824
 # Bitcoin paths
 export BITDEV_="~/Documents/projects/bitdev"
 export BPATH_="$BITDEV_/bitcoin"
-export BINPATH_="$BPATH_/bin"
+export BINPATH_="$BPATH_/build/bin"
 export BDATA_="~/Library/Application\ Support/Bitcoin"
 export BDATA_EXT_HDD_="/Volumes/mercury/Bitcoin"
 export BDOT_="$BITDEV_/bitcoin-dot" # Location of THIS file
